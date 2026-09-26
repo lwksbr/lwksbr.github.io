@@ -55,6 +55,53 @@
       sans-serif;
   }
 
+/* ================================
+   TERMS & POLICIES FOOTER
+================================ */
+
+.policy-footer {
+  margin-top: 5px;
+  padding: 22px 20px;
+  border-top: 1px solid rgba(255,255,255,.14);
+  border-bottom: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.035);
+  text-align: center;
+}
+
+.policy-footer-title {
+  color: #98cb65;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.policy-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.policy-links a {
+  color: rgba(255,255,255,.78);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color .2s ease;
+}
+
+.policy-links a:hover {
+  color: #98cb65;
+}
+
+.policy-links a:not(:last-child)::after {
+  content: "•";
+  color: rgba(255,255,255,.30);
+  margin-left: 24px;
+}
 
   /* =========================
      PAGE
@@ -521,8 +568,26 @@
       font-size: 16px;
     }
 
-    .contact-info {
+    .policy-footer {
+    margin-top: 32px;
+    padding: 20px 12px;
+  }
+
+  .policy-links {
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .policy-links a:not(:last-child)::after {
+    display: none;
+  }
+
+  .policy-links a {
+    font-size: 12px;
+  }
+  .contact-info {
       flex-direction: column;
+
       gap: 5px;
     }
   }
@@ -667,7 +732,7 @@
         <!-- BUY NOW -->
 
         <a
-          href="trust_pay.html"
+          href="trust_terms.html"
           class="button buy-button"
         >
           BUY NOW
@@ -742,6 +807,38 @@
 
   </section>
 
+<!-- TERMS & POLICIES -->
+<section class="policy-footer">
+
+  <div class="policy-footer-title">
+    Terms & Policies
+  </div>
+
+  <div class="policy-links">
+
+    <a href="terms-policies.html#terms">
+      Terms and Conditions
+    </a>
+
+    <a href="terms-policies.html#privacy">
+      Privacy Policy
+    </a>
+
+    <a href="terms-policies.html#refund">
+      Cancellation and Refund
+    </a>
+
+    <a href="terms-policies.html#shipping">
+      Shipping and Exchange
+    </a>
+	
+	 <a href="terms-policies.html#about-us">
+      About Us
+    </a>
+
+  </div>
+
+</section>
 
 </main>
 
