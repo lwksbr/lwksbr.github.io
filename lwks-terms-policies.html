@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Terms & Policies | M/S Lightworkers Brahamaputra</title>
+<link rel="icon" href="favicon.ico?v=2" type="image/x-icon">
+
+<style>
+:root{
+  --bg:#321239;
+  --cyan:#009acb;
+  --green:#98cb65;
+  --white:#fff;
+  --muted:rgba(255,255,255,.74);
+  --card:rgba(255,255,255,.065);
+  --line:rgba(255,255,255,.14);
+}
+
+*{
+  box-sizing:border-box;
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 8% 4%,rgba(0,154,203,.17),transparent 30%),
+    radial-gradient(circle at 92% 88%,rgba(152,203,101,.12),transparent 32%),
+    var(--bg);
+  color:var(--white);
+  font-family:Inter,Arial,sans-serif;
+  line-height:1.7;
+}
+
+.page{
+  width:min(1000px,100%);
+  margin:auto;
+  padding:28px 18px 50px;
+}
+
+.logo-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+  margin:5px auto 28px;
+}
+
+.logo-container img{
+  height:80px;
+  width:auto;
+  object-fit:contain;
+}
+
+.hero{
+  text-align:center;
+  margin-bottom:28px;
+}
+
+.eyebrow{
+  color:var(--green);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:5px 0 0;
+  font-size:clamp(29px,5vw,44px);
+  line-height:1.12;
+}
+
+.hero p{
+  max-width:720px;
+  margin:12px auto 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.notice{
+  margin:0 auto 28px;
+  padding:16px 18px;
+  border-radius:15px;
+  background:rgba(0,154,203,.09);
+  border:1px solid rgba(0,154,203,.24);
+  color:var(--muted);
+  font-size:13px;
+}
+
+.notice strong,
+.policy strong{
+  color:var(--white);
+}
+
+.bookmarks{
+  position:sticky;
+  top:10px;
+  z-index:20;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:10px;
+  margin-bottom:28px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:rgba(50,18,57,.88);
+  backdrop-filter:blur(14px);
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+
+.bookmarks a{
+  color:#fff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.2;
+  padding:10px 13px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.045);
+}
+
+.bookmarks a:hover{
+  border-color:rgba(0,154,203,.55);
+  background:rgba(0,154,203,.12);
+}
+
+.policy{
+  scroll-margin-top:115px;
+  margin-bottom:22px;
+  padding:27px 25px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:var(--card);
+  box-shadow:0 18px 45px rgba(0,0,0,.16);
+  backdrop-filter:blur(12px);
+}
+
+.policy h2{
+  margin:0 0 15px;
+  font-size:25px;
+  line-height:1.25;
+}
+
+.policy h2:before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:25px;
+  margin-right:11px;
+  vertical-align:-4px;
+  border-radius:5px;
+  background:linear-gradient(var(--cyan),var(--green));
+}
+
+.policy h3{
+  margin:20px 0 7px;
+  color:var(--green);
+  font-size:16px;
+}
+
+.policy p{
+  margin:8px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.policy ul{
+  margin:8px 0 12px;
+  padding-left:21px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.policy li{
+  margin:6px 0;
+}
+
+.back-top{
+  display:inline-block;
+  margin-top:10px;
+  color:var(--green);
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+}
+
+.contact-section{
+  margin-top:40px;
+  padding:28px 22px;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(255,255,255,.055);
+}
+
+.contact-title{
+  color:var(--green);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.centre-name{
+  font-size:22px;
+  font-weight:800;
+}
+
+.centre-subtitle{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.contact-info{
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px 24px;
+  font-size:14px;
+}
+
+.contact-info a{
+  color:#fff;
+  text-decoration:none;
+}
+
+.address{
+  max-width:650px;
+  margin:15px auto 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.footer-note{
+  margin-top:18px;
+  text-align:center;
+  color:rgba(255,255,255,.5);
+  font-size:11px;
+}
+
+/* ABOUT US */
+
+.about-section{
+  margin-top:40px;
+  margin-bottom:22px;
+  padding:27px 25px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:var(--card);
+  box-shadow:0 18px 45px rgba(0,0,0,.16);
+  backdrop-filter:blur(12px);
+  text-align:center;
+}
+
+.about-section h2{
+  margin:0 0 15px;
+  font-size:25px;
+  line-height:1.25;
+}
+
+.about-section h2:before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:25px;
+  margin-right:11px;
+  vertical-align:-4px;
+  border-radius:5px;
+  background:linear-gradient(var(--cyan),var(--green));
+}
+
+.about-section p{
+  max-width:760px;
+  margin:8px auto;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.75;
+}
+
+@media(max-width:650px){
+
+  .about-section{
+    margin-top:32px;
+    padding:22px 17px;
+    border-radius:18px;
+  }
+
+  .about-section h2{
+    font-size:21px;
+  }
+
+  .about-section h2:before{
+    height:21px;
+    width:6px;
+  }
+
+  .about-section p{
+    font-size:13px;
+  }
+
+  .page{
+    padding:20px 13px 35px;
+  }
+
+  .logo-container{
+    gap:16px;
+    margin-bottom:22px;
+  }
+
+  .logo-container img{
+    height:80px;
+  }
+
+  .bookmarks{
+    top:6px;
+  }
+
+  .bookmarks a{
+    flex:1 1 calc(50% - 8px);
+    text-align:center;
+    padding:9px 7px;
+    font-size:10px;
+  }
+
+  .policy{
+    padding:22px 17px;
+    border-radius:18px;
+    scroll-margin-top:150px;
+  }
+
+  .policy h2{
+    font-size:21px;
+  }
+
+  .policy h2:before{
+    height:21px;
+    width:6px;
+  }
+
+  .policy p,
+  .policy ul{
+    font-size:13px;
+  }
+
+  .contact-section{
+    padding:24px 15px;
+  }
+
+  .centre-name{
+    font-size:19px;
+  }
+
+  .contact-info{
+    flex-direction:column;
+    gap:8px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="page" id="top">
+
+<div class="logo-container">
+  <img src="images/lwks-logo.png" alt="Lightworkers Logo">
+  <img src="images/ph-logo.png" alt="Pranic Healing Logo">
+</div>
+
+<header class="hero">
+  <div class="eyebrow">M/S LIGHTWORKERS BRAHAMAPUTRA</div>
+
+  <h1>Terms &amp; Policies</h1>
+
+  <p>
+    These policies apply to healings, services and related products provided
+    or sold by M/S Lightworkers Brahamaputra.
+  </p>
+</header>
+
+<div class="notice">
+  <strong>Important:</strong>
+  Please read these policies carefully before purchasing any product or
+  availing of any healing or service. Please ensure that you understand
+  the applicable cost, tenure and terms before making payment.
+</div>
+
+<nav class="bookmarks" aria-label="Policy navigation">
+  <a href="#terms">Terms &amp; Conditions</a>
+  <a href="#privacy">Privacy Policy</a>
+  <a href="#refund">Cancellation &amp; Refund</a>
+  <a href="#shipping">Shipping &amp; Exchange</a>
+  <a href="#about-us">About Us</a>
+</nav>
+
+
+<!-- TERMS AND CONDITIONS -->
+
+<section class="policy" id="terms">
+
+<h2>Terms and Conditions</h2>
+
+<p>
+  These Terms and Conditions govern the purchase and use of
+  <strong>Healings, Services and Related Products</strong> provided or sold by
+  <strong>M/S Lightworkers Brahamaputra</strong>.
+</p>
+
+<h3>1. Nature of Our Business</h3>
+
+<p>
+  M/S Lightworkers Brahamaputra deals in:
+</p>
+
+<ul>
+  <li>Pranic Healing and related healing services.</li>
+  <li>Other services offered by M/S Lightworkers Brahamaputra.</li>
+  <li>Products related to or offered in connection with our activities and services.</li>
+</ul>
+
+<h3>2. Cost and Tenure</h3>
+
+<ul>
+  <li>
+    Customers/clients are requested to understand the
+    <strong>full cost and applicable tenure</strong> of a healing or service
+    before making any payment or confirming the service.
+  </li>
+
+  <li>
+    Payment should be made only after the customer/client has understood
+    the applicable charges, duration/tenure and nature of the service.
+  </li>
+
+  <li>
+    Where a service is provided for a specified tenure, the applicable
+    tenure will be communicated before the service is accepted.
+  </li>
+
+  <li>
+    Any applicable installment or payment arrangement, where offered,
+    will be subject to the terms communicated at the time of agreement.
+  </li>
+</ul>
+
+<h3>3. Authorised Representatives</h3>
+
+<p>
+  Healings and services offered by M/S Lightworkers Brahamaputra may be
+  provided only by our <strong>authorised representatives</strong>.
+</p>
+
+<ul>
+  <li>
+    Customers should avail healing or services only through representatives
+    authorised by M/S Lightworkers Brahamaputra.
+  </li>
+
+  <li>
+    M/S Lightworkers Brahamaputra is not responsible for any payment made
+    to an unauthorised person claiming to represent the organisation.
+  </li>
+
+  <li>
+    Customers are encouraged to verify the identity and authorisation of
+    the person providing the service where necessary.
+  </li>
+</ul>
+
+<h3>4. Mode and Place of Service</h3>
+
+<p>
+  Healings and services may be provided in one or more of the following ways:
+</p>
+
+<ul>
+  <li>
+    At our registered business address.
+  </li>
+
+  <li>
+    At any other location, venue or premises hired or arranged by
+    M/S Lightworkers Brahamaputra.
+  </li>
+
+  <li>
+    Through distant healing using Pranic Healing.
+  </li>
+</ul>
+
+<p>
+  The applicable location or mode of service will depend on the particular
+  healing or service being provided and will be communicated where applicable.
+</p>
+
+<h3>5. Customer Responsibility</h3>
+
+<ul>
+  <li>
+    Customers should provide accurate information wherever such information
+    is required for providing a healing or service.
+  </li>
+
+  <li>
+    Customers should disclose any relevant information necessary for the
+    proper provision of the service.
+  </li>
+
+  <li>
+    Customers should follow the instructions communicated by the authorised
+    representative in relation to the service.
+  </li>
+
+  <li>
+    Customers should not rely on any person who is not an authorised
+    representative of M/S Lightworkers Brahamaputra.
+  </li>
+</ul>
+
+<h3>6. Products</h3>
+
+<p>
+  Products offered by M/S Lightworkers Brahamaputra may include items
+  related to Pranic Healing, spiritual practices, wellness or other
+  related activities.
+</p>
+
+<p>
+  Product-specific information such as price, quantity, description and
+  other applicable details may be communicated or displayed at the time
+  of purchase.
+</p>
+
+<h3>7. Website Use</h3>
+
+<ul>
+  <li>
+    Users should provide accurate information when requested for purchases,
+    communication or service-related purposes.
+  </li>
+
+  <li>
+    Users must not misuse, interfere with or attempt to disrupt the website,
+    payment functionality or related services.
+  </li>
+
+  <li>
+    Information, prices, services and products displayed on the website
+    may be updated from time to time.
+  </li>
+</ul>
+
+<a class="back-top" href="#top">↑ Back to top</a>
+
+</section>
+
+
+<!-- PRIVACY POLICY -->
+
+<section class="policy" id="privacy">
+
+<h2>Privacy Policy</h2>
+
+<p>
+  <strong>M/S Lightworkers Brahamaputra</strong> respects the privacy of
+  customers, clients and visitors who use our website, purchase products
+  or avail healings and services.
+</p>
+
+<h3>1. Information We May Receive</h3>
+
+<p>
+  Depending on the purchase, enquiry, healing or service, we may receive
+  information such as your name, phone number, email address, address,
+  service-related information and payment/transaction details necessary
+  to identify or reconcile a payment.
+</p>
+
+<h3>2. How Information May Be Used</h3>
+
+<ul>
+  <li>To process and confirm purchases and service requests.</li>
+
+  <li>
+    To communicate information relating to healings, services,
+    appointments, products and payments.
+  </li>
+
+  <li>To respond to enquiries and provide customer support.</li>
+
+  <li>To reconcile payments and maintain administrative records.</li>
+
+  <li>
+    To maintain records relating to customers, services and transactions.
+  </li>
+
+  <li>
+    To comply with applicable legal, accounting or administrative requirements.
+  </li>
+</ul>
+
+<h3>3. Payment Information</h3>
+
+<p>
+  Payments may be processed through payment services or banking channels.
+  We do not intend to collect or store sensitive card, banking or
+  authentication credentials beyond what is necessary for transaction
+  confirmation and reconciliation.
+</p>
+
+<h3>4. Sharing of Information</h3>
+
+<p>
+  Personal information may be shared where reasonably necessary to operate
+  our services, process payments, provide customer support, use service
+  providers required to operate the website or payment process, or where
+  required by law or lawful authority.
+</p>
+
+<h3>5. Data Security</h3>
+
+<p>
+  Reasonable measures may be used to protect information against
+  unauthorised access, misuse or disclosure. However, no website,
+  electronic transmission or storage system can be guaranteed to be
+  completely secure.
+</p>
+
+<h3>6. Third-Party Services</h3>
+
+<p>
+  The website may use third-party services for payment processing,
+  hosting, communication or other operational functions. Those services
+  may have their own terms and privacy practices.
+</p>
+
+<a class="back-top" href="#top">↑ Back to top</a>
+
+</section>
+
+
+<!-- CANCELLATION AND REFUND -->
+
+<section class="policy" id="refund">
+
+<h2>Cancellation and Refund</h2>
+
+<h3>1. Healings and Services</h3>
+
+<p>
+  Healings and services are provided after the customer/client has been
+  informed of the applicable cost and tenure.
+</p>
+
+<p>
+  <strong>
+    Once a healing or service has been provided, it cannot be refunded.
+  </strong>
+</p>
+
+<ul>
+  <li>
+    Customers/clients should understand the full cost and applicable tenure
+    before confirming the healing or service.
+  </li>
+
+  <li>
+    Payment should be made only after the customer/client is satisfied with
+    the applicable cost, tenure and nature of the service.
+  </li>
+
+  <li>
+    Once the healing or service has been provided, no refund will be made
+    for the service already provided.
+  </li>
+</ul>
+
+<h3>2. Services Not Yet Provided</h3>
+
+<p>
+  Any request relating to cancellation of a service that has not yet been
+  provided will be considered according to the specific service terms,
+  payment arrangement and circumstances applicable to that transaction.
+</p>
+
+<h3>3. Distant Healing</h3>
+
+<p>
+  Distant healing through Pranic Healing is considered a service.
+  Once the agreed distant healing service has been provided, it cannot
+  be refunded.
+</p>
+
+<h3>4. Products</h3>
+
+<p>
+  Product purchases are governed by the Shipping and Exchange Policy
+  provided on this page. Defective products may be eligible for exchange
+  in accordance with that policy.
+</p>
+
+<h3>5. Duplicate or Incorrect Payments</h3>
+
+<p>
+  If you believe that a payment was duplicated or made incorrectly,
+  please contact M/S Lightworkers Brahamaputra as soon as possible with
+  the transaction details so that the payment can be reviewed and
+  reconciled.
+</p>
+
+<a class="back-top" href="#top">↑ Back to top</a>
+
+</section>
+
+
+<!-- SHIPPING AND EXCHANGE -->
+
+<section class="policy" id="shipping">
+
+<h2>Shipping and Exchange</h2>
+
+<h3>1. Healings and Services</h3>
+
+<p>
+  Healings and services are not physical products and therefore are not
+  subject to physical shipping.
+</p>
+
+<p>
+  They may be provided:
+</p>
+
+<ul>
+  <li>At our registered business address.</li>
+  <li>At another place or venue hired or arranged by us.</li>
+  <li>As distant healing through Pranic Healing.</li>
+</ul>
+
+<h3>2. Products</h3>
+
+<p>
+  M/S Lightworkers Brahamaputra may sell products related to our
+  activities and services. Product delivery arrangements may vary
+  depending on the product and purchase.
+</p>
+
+<h3>3. Defective Products</h3>
+
+<p>
+  If a product purchased from M/S Lightworkers Brahamaputra is found to
+  be defective, the customer may request an exchange for a new product
+  of the same type, subject to availability.
+</p>
+
+<p>
+  <strong>
+    A defective product must be reported and presented for exchange
+    within 7 days from the date on which the product was delivered by us.
+  </strong>
+</p>
+
+<ul>
+  <li>
+    The product may be inspected to determine whether it is defective.
+  </li>
+
+  <li>
+    The exchange is applicable only where the product is determined to
+    be defective.
+  </li>
+
+  <li>
+    The exchange will be subject to availability of the replacement product.
+  </li>
+
+  <li>
+    Customers should retain the product and, where applicable, its original
+    packaging and purchase details until the exchange is completed.
+  </li>
+</ul>
+
+<h3>4. Products Not Covered as Defective</h3>
+
+<p>
+  Damage caused after delivery due to misuse, improper handling,
+  accidental damage, normal wear and tear, or use contrary to the
+  product's intended purpose may not be treated as a manufacturing
+  or product defect.
+</p>
+
+<h3>5. Service Exchange</h3>
+
+<p>
+  Healings and services cannot be exchanged for physical products.
+  Once a healing or service has been provided, it cannot be refunded.
+</p>
+
+<a class="back-top" href="#top">↑ Back to top</a>
+
+</section>
+
+
+<!-- ABOUT US -->
+
+<section class="about-section" id="about-us">
+
+<h2>About Us</h2>
+
+<p>
+  <strong>M/S Lightworkers Brahamaputra</strong> is a partnership firm that runs 
+  <strong>GMCKS Lightworkers Brahamaputra</strong>,
+  a Pranic Healing and Arhatic Yoga Centre.
+</p>
+
+<p>
+  We provide <strong>Healings, Services and Related Products</strong>
+  connected with Pranic Healing, spiritual practices and related
+  activities.
+</p>
+
+<p>
+  Our healings and services may be provided by our authorised
+  representatives at our registered address, at other venues arranged
+  or hired by us, or through distant healing using Pranic Healing.
+</p>
+
+<p>
+  We aim to provide our customers and clients with clear information
+  regarding the nature, cost and applicable tenure of our healings and
+  services before they make a payment or confirm a service.
+</p>
+
+<p>
+  We also offer related products, which are subject to the applicable
+  product terms and exchange policy stated on this website.
+</p>
+
+<a class="back-top" href="#top">↑ Back to top</a>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section class="contact-section">
+
+<div class="contact-title">Contact Us</div>
+
+<div class="centre-name">
+  M/S Lightworkers Brahamaputra
+</div>
+
+<div class="centre-subtitle">
+  GMCKS Lightworkers Brahamaputra<br>
+  Pranic Healing and Arhatic Yoga Centre
+</div>
+
+<div class="contact-info">
+
+<div>
+  📞
+  <a href="tel:+919314007364">+91 9314007364</a>
+  /
+  <a href="tel:+917578039696">+91 7578039696</a>
+</div>
+
+<div>
+  ✉️
+  <a href="mailto:gmckslightworkersbrahamaputra@gmail.com">
+    gmckslightworkersbrahamaputra@gmail.com
+  </a>
+</div>
+
+</div>
+
+<div class="address">
+  📍 4th Floor, Advika Tower, H No. 87, MG Road, Pan Bazar,
+  Opp. Sukreswar Ghat Park, Guwahati - 781001
+</div>
+
+</section>
+
+
+<div class="footer-note">
+  © M/S Lightworkers Brahamaputra. All rights reserved.
+</div>
+
+</main>
+
+</body>
+</html>
