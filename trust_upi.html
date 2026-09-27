@@ -249,7 +249,25 @@
     margin: 0 0 10px;
   }
 
+/* =========================
+   COPY UPI TITLE
+   ========================= */
 
+.upi-copy-title {
+  color: var(--green);
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+
+  margin: 22px auto 13px;
+
+  line-height: 1.5;
+}
   /* =========================
      UPI ID + COPY BUTTON
      ========================= */
@@ -558,43 +576,48 @@
 
     </div>
 
-
     <!-- =========================
          QR CODE
          ========================= -->
 
-    <div class="qr-section">
+<div class="qr-section">
 
-      <p class="qr-title">
-        OR SCAN TO PAY
-      </p>
+  <p class="qr-title">
+    OR SCAN TO PAY
+  </p>
 
+  <!-- QR CODE -->
 
-      <!-- UPI ID + COPY BUTTON -->
-
-      <div class="upi-row">
-
-        <p class="upi-id" id="upiId">
-          lightworkersbrahmaputratrust@idbi
-        </p>
-
-        <button
-          class="copy-upi-btn"
-          onclick="copyUPI(this)"
-        >
-          Copy
-        </button>
-
-      </div>
+  <img
+    class="qr-code"
+    src="images/trust_qrcode_image.png"
+    alt="UPI QR Code"
+  >
 
 
-      <img
-        class="qr-code"
-        src="images/trust_qrcode_image.png"
-        alt="UPI QR Code"
-      >
+  <!-- UPI ID -->
 
-    </div>
+  <p class="upi-copy-title">
+    OR COPY AND PASTE THE UPI ID IN YOUR PREFERRED APP
+  </p>
+
+  <div class="upi-row">
+
+    <p class="upi-id" id="upiId">
+      lightworkersbrahmaputratrust@idbi
+    </p>
+
+    <button
+      class="copy-upi-btn"
+      onclick="copyUPI(this)"
+    >
+      Copy
+    </button>
+
+  </div>
+
+</div>
+  
 
 
     <!-- =========================

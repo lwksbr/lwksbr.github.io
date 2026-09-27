@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#321239">
+
+<link rel="icon" href="favicon.ico?v=2" type="image/x-icon">
+
+<title>Payment Options | M/S Lightworkers Brahamaputra</title>
+
+<style>
+
+:root {
+  --bg: #321239;
+  --cyan: #009acb;
+  --green: #98cb65;
+  --white: #ffffff;
+  --muted: rgba(255,255,255,.72);
+  --card: rgba(255,255,255,.075);
+  --line: rgba(255,255,255,.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 10% 5%,
+      rgba(0,154,203,.16),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(152,203,101,.12),
+      transparent 32%
+    ),
+    var(--bg);
+
+  color: var(--white);
+
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+/* =========================
+   PAGE
+   ========================= */
+
+.page {
+  width: min(100%, 1000px);
+  margin: auto;
+  padding: 28px 18px 45px;
+}
+
+
+/* =========================
+   LOGOS
+   ========================= */
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+
+  margin: 5px auto 35px;
+
+  padding: 5px 10px;
+}
+
+.logo-container img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+
+/* =========================
+   HERO
+   ========================= */
+
+.hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  color: var(--green);
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: clamp(30px, 6vw, 48px);
+
+  line-height: 1.1;
+}
+
+h1 span {
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      var(--green)
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.hero-text {
+  max-width: 650px;
+
+  margin: 15px auto 0;
+
+  color: var(--muted);
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   PAYMENT CARD
+   ========================= */
+
+.payment-card {
+  background: var(--card);
+
+  border: 1px solid var(--line);
+
+  border-radius: 24px;
+
+  padding: clamp(24px, 5vw, 42px);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.22);
+
+  backdrop-filter: blur(8px);
+}
+
+
+/* =========================
+   SECTION TITLE
+   ========================= */
+
+.section-title {
+  color: var(--green);
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 20px;
+
+  text-align: center;
+}
+
+
+/* =========================
+   PAYMENT OPTIONS
+   ========================= */
+
+.payment-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+
+/* =========================
+   PAYMENT OPTION
+   ========================= */
+
+.payment-option {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  min-height: 125px;
+
+  padding: 20px;
+
+  border-radius: 17px;
+
+  border: 1px solid var(--line);
+
+  background: rgba(0,0,0,.10);
+
+  color: var(--white);
+
+  text-decoration: none;
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.payment-option:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(152,203,101,.55);
+
+  background: rgba(255,255,255,.085);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.18);
+}
+
+
+/* =========================
+   PAYMENT ICON
+   ========================= */
+
+.payment-icon {
+  flex: 0 0 58px;
+
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,154,203,.20),
+      rgba(152,203,101,.18)
+    );
+
+  border: 1px solid rgba(255,255,255,.10);
+
+  font-size: 27px;
+}
+
+
+/* =========================
+   PAYMENT TEXT
+   ========================= */
+
+.payment-content {
+  flex: 1;
+}
+
+.payment-title {
+  margin: 0 0 7px;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+.payment-description {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   ARROW
+   ========================= */
+
+.payment-arrow {
+  color: var(--green);
+
+  font-size: 22px;
+
+  font-weight: 700;
+
+  transition:
+    transform .18s ease;
+}
+
+.payment-option:hover .payment-arrow {
+  transform: translateX(4px);
+}
+
+
+/* =========================
+   FOOTER / CONTACT
+   ========================= */
+
+.contact-section {
+  margin-top: 40px;
+
+  padding: 28px 20px;
+
+  border-top: 1px solid var(--line);
+
+  text-align: center;
+}
+
+.contact-title {
+  color: var(--green);
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 15px;
+}
+
+.centre-name {
+  font-size: 18px;
+
+  font-weight: 800;
+
+  line-height: 1.4;
+
+  margin-bottom: 12px;
+}
+
+.centre-subtitle {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  margin-bottom: 20px;
+}
+
+.contact-info {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 10px 25px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+.contact-info a {
+  color: var(--white);
+
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  color: var(--green);
+}
+
+.address {
+  max-width: 650px;
+
+  margin: 18px auto 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* ================================
+   TERMS & POLICIES FOOTER
+   ================================ */
+
+.policy-footer {
+  margin-top: 5px;
+
+  padding: 22px 20px;
+
+  border-top: 1px solid rgba(255,255,255,.14);
+
+  border-bottom: 1px solid rgba(255,255,255,.14);
+
+  background: rgba(255,255,255,.035);
+
+  text-align: center;
+}
+
+.policy-footer-title {
+  color: #98cb65;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 15px;
+}
+
+.policy-links {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 8px 24px;
+}
+
+.policy-links a {
+  color: rgba(255,255,255,.78);
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: color .2s ease;
+}
+
+.policy-links a:hover {
+  color: #98cb65;
+}
+
+.policy-links a:not(:last-child)::after {
+  content: "•";
+
+  color: rgba(255,255,255,.30);
+
+  margin-left: 24px;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 650px) {
+
+  .page {
+    padding:
+      18px 12px 35px;
+  }
+
+  .logo-container {
+    gap: 20px;
+
+    margin-bottom: 26px;
+  }
+
+  .logo-container img {
+    height: 70px;
+  }
+
+  .payment-card {
+    border-radius: 20px;
+
+    padding: 22px 16px;
+  }
+
+  .payment-options {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .payment-option {
+    min-height: 105px;
+
+    padding: 16px;
+  }
+
+  .payment-icon {
+    flex-basis: 50px;
+
+    width: 50px;
+    height: 50px;
+
+    font-size: 23px;
+  }
+
+  .payment-title {
+    font-size: 15px;
+  }
+
+  .payment-description {
+    font-size: 12px;
+  }
+
+  .contact-section {
+    margin-top: 30px;
+
+    padding: 25px 10px;
+  }
+
+  .centre-name {
+    font-size: 16px;
+  }
+
+  .contact-info {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .policy-footer {
+    margin-top: 32px;
+
+    padding: 20px 12px;
+  }
+
+  .policy-links {
+    flex-direction: column;
+
+    gap: 11px;
+  }
+
+  .policy-links a:not(:last-child)::after {
+    display: none;
+  }
+
+  .policy-links a {
+    font-size: 12px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<main class="page">
+
+
+  <!-- =========================
+       LOGOS
+       ========================= -->
+
+  <header class="logo-container">
+
+    <img
+      src="images/lwks-logo.png"
+      alt="Lightworkers Logo"
+    >
+
+    <img
+      src="images/ph-logo.png"
+      alt="Pranic Healing Logo"
+    >
+
+  </header>
+
+
+  <!-- =========================
+       HERO
+       ========================= -->
+
+  <section class="hero">
+
+    <div class="eyebrow">
+      Secure Payment
+    </div>
+
+    <h1>
+      <span>Payment Options</span>
+    </h1>
+
+    <p class="hero-text">
+      Choose your preferred payment method to complete
+      your payment to M/S Lightworkers Brahamaputra.
+    </p>
+
+  </section>
+
+
+  <!-- =========================
+       PAYMENT OPTIONS
+       ========================= -->
+
+  <section class="payment-card">
+
+    <div class="section-title">
+      Select a Payment Method
+    </div>
+
+
+    <div class="payment-options">
+
+
+      <!-- UPI -->
+
+      <a
+        href="lwks_upi.html"
+        class="payment-option"
+      >
+
+        <div class="payment-icon">
+          📱
+        </div>
+
+        <div class="payment-content">
+
+          <h2 class="payment-title">
+            UPI
+          </h2>
+
+          <p class="payment-description">
+            Pay conveniently using UPI through your
+            preferred UPI application.
+          </p>
+
+        </div>
+
+        <div class="payment-arrow">
+          →
+        </div>
+
+      </a>
+
+
+      <!-- BANK TRANSFER -->
+
+      <a
+        href="lwks_bank.html"
+        class="payment-option"
+      >
+
+        <div class="payment-icon">
+          🏦
+        </div>
+
+        <div class="payment-content">
+
+          <h2 class="payment-title">
+            Bank Transfer / Cheque
+          </h2>
+
+          <p class="payment-description">
+            Make your payment through bank transfer
+            or cheque.
+          </p>
+
+        </div>
+
+        <div class="payment-arrow">
+          →
+        </div>
+
+      </a>
+
+
+      <!-- RAZORPAY -->
+
+      <a
+        href="https://razorpay.me/@lightworkersbrahamaputra"
+        class="payment-option"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+
+        <div class="payment-icon">
+          💳
+        </div>
+
+        <div class="payment-content">
+
+          <h2 class="payment-title">
+            Credit/Debit Cards & EMI
+          </h2>
+
+          <p class="payment-description">
+            Pay securely using credit card, debit card
+            or available EMI options.
+          </p>
+
+        </div>
+
+        <div class="payment-arrow">
+          ↗
+        </div>
+
+      </a>
+
+
+      <!-- OTHER EMI -->
+
+      <a
+        href="emi-options.html"
+        class="payment-option"
+      >
+
+        <div class="payment-icon">
+          🧾
+        </div>
+
+        <div class="payment-content">
+
+          <h2 class="payment-title">
+            Other EMI Options
+          </h2>
+
+          <p class="payment-description">
+            Explore additional EMI and installment
+            payment options.
+          </p>
+
+        </div>
+
+        <div class="payment-arrow">
+          →
+        </div>
+
+      </a>
+
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER / CONTACT
+       ========================= -->
+
+  <section class="contact-section">
+
+    <div class="contact-title">
+      Contact Us
+    </div>
+
+    <div class="centre-name">
+      GMCKS Lightworkers Brahamaputra
+    </div>
+
+    <div class="centre-subtitle">
+      Pranic Healing and Arhatic Yoga Centre
+    </div>
+
+
+    <div class="contact-info">
+
+      <div>
+        📞
+        <a href="tel:+919314007364">
+          +91 9314007364
+        </a>
+        /
+        <a href="tel:+917578039696">
+          +91 7578039696
+        </a>
+      </div>
+
+      <div>
+        ✉️
+        <a href="mailto:gmckslightworkersbrahamaputra@gmail.com">
+          gmckslightworkersbrahamaputra@gmail.com
+        </a>
+      </div>
+
+    </div>
+
+
+    <div class="address">
+
+      📍 4th Floor, Advika Tower, H No. 87,
+      MG Road, Pan Bazar,
+      Opp. Sukreswar Ghat Park,
+      Guwahati - 781001
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       TERMS & POLICIES
+       ========================= -->
+
+  <section class="policy-footer">
+
+    <div class="policy-footer-title">
+      Terms & Policies
+    </div>
+
+    <div class="policy-links">
+
+      <a href="lwks-terms-policies.html#terms">
+        Terms and Conditions
+      </a>
+
+      <a href="lwks-terms-policies.html#privacy">
+        Privacy Policy
+      </a>
+
+      <a href="lwks-terms-policies.html#refund">
+        Cancellation and Refund
+      </a>
+
+      <a href="lwks-terms-policies.html#shipping">
+        Shipping and Exchange
+      </a>
+
+      <a href="lwks-terms-policies.html#about-us">
+        About Us
+      </a>
+
+    </div>
+
+  </section>
+
+
+</main>
+
+</body>
+</html>
