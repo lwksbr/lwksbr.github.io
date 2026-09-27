@@ -7,7 +7,7 @@
 
 <link rel="icon" href="favicon.ico?v=2" type="image/x-icon">
 
-<title>Payment Options | Lightworkers Brahamaputra Trust</title>
+<title>EMI Options | Lightworkers Brahamaputra Trust</title>
 
 <style>
 
@@ -96,7 +96,7 @@ body {
 
 .hero {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 .eyebrow {
@@ -135,7 +135,7 @@ h1 span {
 }
 
 .hero-text {
-  max-width: 650px;
+  max-width: 700px;
 
   margin: 15px auto 0;
 
@@ -148,10 +148,10 @@ h1 span {
 
 
 /* =========================
-   PAYMENT CARD
+   MAIN CARD
    ========================= */
 
-.payment-card {
+.emi-card {
   background: var(--card);
 
   border: 1px solid var(--line);
@@ -182,189 +182,277 @@ h1 span {
 
   text-transform: uppercase;
 
-  margin-bottom: 20px;
-
-  text-align: center;
+  margin-bottom: 12px;
 }
 
 
 /* =========================
-   PAYMENT OPTIONS
+   AMOUNT INPUT
    ========================= */
 
-.payment-options {
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  gap: 15px;
+.amount-section {
+  margin-bottom: 30px;
 }
 
+.amount-description {
+  color: var(--muted);
 
-/* =========================
-   PAYMENT OPTION
-   ========================= */
+  font-size: 14px;
 
-.payment-option {
+  line-height: 1.6;
+
+  margin: 0 0 16px;
+}
+
+.amount-input-wrapper {
   position: relative;
 
-  display: flex;
-  align-items: center;
+  max-width: 500px;
+}
 
-  gap: 18px;
+.currency {
+  position: absolute;
 
-  min-height: 125px;
+  left: 17px;
+  top: 50%;
 
-  padding: 20px;
+  transform: translateY(-50%);
 
-  border-radius: 17px;
+  color: var(--green);
+
+  font-size: 19px;
+
+  font-weight: 800;
+}
+
+#amount {
+  width: 100%;
+
+  padding: 16px 18px 16px 42px;
+
+  border-radius: 13px;
 
   border: 1px solid var(--line);
 
-  background: rgba(0,0,0,.10);
+  outline: none;
+
+  background: rgba(0,0,0,.18);
 
   color: var(--white);
 
-  text-decoration: none;
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
-}
-
-.payment-option:hover {
-  transform: translateY(-3px);
-
-  border-color: rgba(152,203,101,.55);
-
-  background: rgba(255,255,255,.085);
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.18);
-}
-
-
-/* =========================
-   PAYMENT ICON
-   ========================= */
-
-.payment-icon {
-  flex: 0 0 58px;
-
-  width: 58px;
-  height: 58px;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 16px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,154,203,.20),
-      rgba(152,203,101,.18)
-    );
-
-  border: 1px solid rgba(255,255,255,.10);
-
-  font-size: 27px;
-}
-
-
-/* =========================
-   PAYMENT TEXT
-   ========================= */
-
-.payment-content {
-  flex: 1;
-}
-
-.payment-title {
-  margin: 0 0 7px;
-
-  font-size: 17px;
-
-  font-weight: 800;
-
-  line-height: 1.3;
-}
-
-.payment-description {
-  margin: 0;
-
-  color: var(--muted);
-
-  font-size: 13px;
-
-  line-height: 1.5;
-}
-
-
-/* =========================
-   ARROW
-   ========================= */
-
-.payment-arrow {
-  color: var(--green);
-
-  font-size: 22px;
+  font-size: 18px;
 
   font-weight: 700;
 
   transition:
-    transform .18s ease;
+    border-color .2s ease,
+    box-shadow .2s ease;
 }
 
-.payment-option:hover .payment-arrow {
-  transform: translateX(4px);
+#amount::placeholder {
+  color: rgba(255,255,255,.40);
 }
+
+#amount:focus {
+  border-color: var(--cyan);
+
+  box-shadow:
+    0 0 0 3px rgba(0,154,203,.12);
+}
+
+
 /* =========================
-   THANK YOU MESSAGE
+   EMI TABLE
    ========================= */
 
-.thank-you {
+.emi-section {
+  margin-top: 10px;
+}
 
+.emi-table {
+  width: 100%;
+
+  border-collapse: separate;
+
+  border-spacing: 0 9px;
+}
+
+.emi-table th {
+  color: var(--muted);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+
+  text-align: left;
+
+  padding: 0 16px 5px;
+}
+
+.emi-table td {
+  padding: 17px 16px;
+
+  background: rgba(0,0,0,.12);
+
+  border-top: 1px solid var(--line);
+
+  border-bottom: 1px solid var(--line);
+
+  font-size: 14px;
+}
+
+.emi-table td:first-child {
+  border-left: 1px solid var(--line);
+
+  border-radius: 12px 0 0 12px;
+
+  font-weight: 800;
+}
+
+.emi-table td:last-child {
+  border-right: 1px solid var(--line);
+
+  border-radius: 0 12px 12px 0;
+
+  color: var(--green);
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  text-align: right;
+}
+
+.emi-table tr:hover td {
+  background: rgba(255,255,255,.055);
+}
+
+
+/* =========================
+   TERMS LINK
+   ========================= */
+
+.terms-note {
   margin-top: 25px;
 
-  padding: 19px 17px;
+  padding: 16px;
 
-  border-radius: 15px;
+  border-radius: 13px;
 
-  background:
-    rgba(152,203,101,.07);
+  background: rgba(152,203,101,.07);
 
-  border:
-    1px solid
-    rgba(152,203,101,.18);
-
-  text-align: center;
+  border: 1px solid rgba(152,203,101,.18);
 
   color: var(--muted);
 
   font-size: 13px;
 
-  line-height: 1.7;
+  line-height: 1.6;
 
+  text-align: center;
+}
+
+.terms-note a {
+  color: var(--green);
+
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+.terms-note a:hover {
+  text-decoration: underline;
 }
 
 
-.thank-you strong {
+/* =========================
+   WHATSAPP SECTION
+   ========================= */
 
-  display: block;
+.whatsapp-section {
+  margin-top: 28px;
 
-  color: var(--white);
+  padding-top: 28px;
 
-  margin-bottom: 5px;
+  border-top: 1px solid var(--line);
+
+  text-align: center;
+}
+
+.whatsapp-title {
+  color: var(--green);
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 10px;
+}
+
+.whatsapp-text {
+  max-width: 600px;
+
+  margin: 0 auto 18px;
+
+  color: var(--muted);
 
   font-size: 14px;
 
+  line-height: 1.6;
 }
+
+.whatsapp-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 13px 25px;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--green)
+    );
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  transition:
+    transform .15s ease,
+    filter .15s ease;
+}
+
+.whatsapp-button:hover {
+  filter: brightness(1.08);
+
+  transform: translateY(-1px);
+}
+
+.whatsapp-button:active {
+  transform: scale(.98);
+}
+
+
 /* =========================
    FOOTER / CONTACT
    ========================= */
@@ -520,7 +608,18 @@ h1 span {
   margin-left: 24px;
 }
 
+.back-payment-link {
+  display: block;
+  margin: 8px auto 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: none;
+}
 
+.back-payment-link:hover {
+  color: var(--green);
+}
 /* =========================
    MOBILE
    ========================= */
@@ -542,39 +641,31 @@ h1 span {
     height: 70px;
   }
 
-  .payment-card {
+  .emi-card {
     border-radius: 20px;
 
     padding: 22px 16px;
   }
 
-  .payment-options {
-    grid-template-columns: 1fr;
-
-    gap: 12px;
+  .emi-table th,
+  .emi-table td {
+    padding: 14px 11px;
   }
 
-  .payment-option {
-    min-height: 105px;
-
-    padding: 16px;
+  .emi-table th {
+    font-size: 10px;
   }
 
-  .payment-icon {
-    flex-basis: 50px;
-
-    width: 50px;
-    height: 50px;
-
-    font-size: 23px;
+  .emi-table td {
+    font-size: 13px;
   }
 
-  .payment-title {
-    font-size: 15px;
+  .emi-table td:last-child {
+    font-size: 14px;
   }
 
-  .payment-description {
-    font-size: 12px;
+  .whatsapp-button {
+    width: 100%;
   }
 
   .contact-section {
@@ -650,182 +741,167 @@ h1 span {
   <section class="hero">
 
     <div class="eyebrow">
-      Secure Payment
+      Flexible Payment Options
     </div>
 
     <h1>
-      <span>Payment Options</span>
+      <span>EMI Options</span>
     </h1>
 
     <p class="hero-text">
-      Choose your preferred payment method to complete
-      your payment to <strong>Lightworkers Brahamaputra Trust</strong>.
-    <br>
-      Please proceed only after confirming that your payment is for a Course/Class or towards Donation.
- 
-  Otherwise, go to the <a href="payments.html">Payments Page</a>.
-</p>
+      Enter the amount you wish to pay and view the
+      available installment options for 3 to 9 months.
+	  <br>
+	  Provided by M/S Lightworkers Brahamaputra
+    </p>
 
   </section>
 
 
   <!-- =========================
-       PAYMENT OPTIONS
+       EMI CARD
        ========================= -->
 
-  <section class="payment-card">
+  <section class="emi-card">
 
-    <div class="section-title">
-      Select a Payment Method
+
+    <!-- AMOUNT -->
+
+    <div class="amount-section">
+
+      <div class="section-title">
+        Enter Payment Amount
+      </div>
+
+      <p class="amount-description">
+        Enter the total amount for which you would like
+        to calculate the EMI.
+      </p>
+
+      <div class="amount-input-wrapper">
+
+        <span class="currency">₹</span>
+
+        <input
+          type="number"
+          id="amount"
+          placeholder="Enter amount"
+          min="1"
+          step="1"
+          inputmode="numeric"
+          aria-label="Payment amount"
+        >
+
+      </div>
+
     </div>
 
 
-    <div class="payment-options">
+    <!-- EMI OPTIONS -->
+
+    <div class="emi-section">
+
+      <div class="section-title">
+        Available EMI Options
+      </div>
+
+      <table class="emi-table">
+
+        <thead>
+          <tr>
+            <th>Tenure</th>
+            <th>Monthly EMI</th>
+          </tr>
+        </thead>
+
+        <tbody id="emiTableBody">
+
+          <tr>
+            <td>3 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>4 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>5 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>6 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>7 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>8 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+          <tr>
+            <td>9 Months</td>
+            <td class="emi-value">₹0</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
 
 
-      <!-- UPI -->
+    <!-- TERMS -->
 
-      <a
-        href="trust_upi.html"
-        class="payment-option"
-      >
+    <div class="terms-note">
 
-        <div class="payment-icon">
-          📱
-        </div>
+      EMI calculations are subject to the applicable terms
+      and conditions.
 
-        <div class="payment-content">
+      <br>
 
-          <h2 class="payment-title">
-            UPI
-          </h2>
-
-          <p class="payment-description">
-            Pay conveniently using UPI through your
-            preferred UPI application.
-          </p>
-
-        </div>
-
-        <div class="payment-arrow">
-          →
-        </div>
-
+      <a href="trust-emi-terms.html">
+        See our Terms & Conditions regarding EMI
+        and how it is calculated →
       </a>
 
-
-      <!-- BANK TRANSFER -->
-
-      <a
-        href="trust_bank.html"
-        class="payment-option"
-      >
-
-        <div class="payment-icon">
-          🏦
-        </div>
-
-        <div class="payment-content">
-
-          <h2 class="payment-title">
-            Bank Transfer / Cheque
-          </h2>
-
-          <p class="payment-description">
-            Make your payment through bank transfer
-            or cheque.
-          </p>
-
-        </div>
-
-        <div class="payment-arrow">
-          →
-        </div>
-
-      </a>
+    </div>
 
 
-      <!-- RAZORPAY 
+    <!-- WHATSAPP -->
+
+    <div class="whatsapp-section">
+
+      <div class="whatsapp-title">
+        Need Help With EMI?
+      </div>
+
+      <p class="whatsapp-text">
+        Contact us to know more about our EMI options,
+        installment plans and payment process.
+      </p>
 
       <a
-        href="https://razorpay.me/@lightworkersbrahamaputra"
-        class="payment-option"
+        href="https://api.whatsapp.com/send?phone=917578039696&text=I%20would%20like%20to%20know%20more%20about%20the%20EMI%20Options"
+        class="whatsapp-button"
         target="_blank"
         rel="noopener noreferrer"
       >
-
-        <div class="payment-icon">
-          💳
-        </div>
-
-        <div class="payment-content">
-
-          <h2 class="payment-title">
-            Credit/Debit Cards & EMI
-          </h2>
-
-          <p class="payment-description">
-            Pay securely using credit card, debit card
-            or available EMI options.
-          </p>
-
-        </div>
-
-        <div class="payment-arrow">
-          ↗
-        </div>
-
+        💬 Contact Us on WhatsApp
       </a>
-      -->
-
-      <!-- OTHER EMI -->
-
-      <a
-        href="trust-emi-options.html"
-        class="payment-option"
-      >
-
-        <div class="payment-icon">
-          🧾
-        </div>
-
-        <div class="payment-content">
-
-          <h2 class="payment-title">
-            Other EMI Options
-          </h2>
-
-          <p class="payment-description">
-            Explore additional EMI and installment
-            payment options offered by M/S Lightworkers Brahamaputra
-          </p>
-
-        </div>
-
-        <div class="payment-arrow">
-          →
-        </div>
-
-      </a>
-
-
+		<a href="trust_pay.html" class="back-payment-link">
+			← Go Back
+		</a>
     </div>
- <!-- =========================
-         THANK YOU
-         ========================= -->
 
-    <div class="thank-you">
 
-      <strong>
-        Thank You for Your Support
-      </strong>
-
-      We sincerely thank you for your business.
-      May you be blessed with immense prosperity
-      and abundance. We look forward to serving you
-      with love and dedication.
-
-    </div>
   </section>
 
 
@@ -922,5 +998,132 @@ h1 span {
 
 </main>
 
+
+<script>
+
+/*
+  EMI CALCULATION
+
+  Excel formula:
+
+  =CEILING.MATH(
+      B2 * (1 + (months - 3) * 1% + 5%),
+      months
+   ) / months
+
+  This JavaScript reproduces the same calculation.
+
+  B2 = amount entered by the user.
+*/
+
+
+const amountInput = document.getElementById("amount");
+
+const emiValues = document.querySelectorAll(".emi-value");
+
+
+function ceilingMath(number, significance) {
+
+  return Math.ceil(number / significance) * significance;
+
+}
+
+
+function calculateEMI() {
+
+  const amount = parseFloat(amountInput.value);
+
+
+  // If no valid amount has been entered,
+  // show ₹0 for every option.
+
+  if (!amount || amount <= 0) {
+
+    emiValues.forEach(function(cell) {
+
+      cell.textContent = "₹0";
+
+    });
+
+    return;
+
+  }
+
+
+  emiValues.forEach(function(cell, index) {
+
+    const months = index + 3;
+
+
+    /*
+      Excel:
+
+      B2 * (1 + (months - 3) * 1% + 5%)
+
+      Equivalent JavaScript:
+
+      amount * (1 + (months - 3) * 0.01 + 0.05)
+    */
+
+    const totalAmount =
+      amount *
+      (
+        1 +
+        (months - 3) * 0.01 +
+        0.05
+      );
+
+
+    /*
+      Excel:
+
+      CEILING.MATH(totalAmount, months) / months
+    */
+
+    const roundedTotal =
+      ceilingMath(totalAmount, months);
+
+    const monthlyEMI =
+      roundedTotal / months;
+
+
+    /*
+      Format the result in Indian currency style.
+    */
+
+    cell.textContent =
+      "₹" +
+      monthlyEMI.toLocaleString(
+        "en-IN",
+        {
+          maximumFractionDigits: 0
+        }
+      );
+
+  });
+
+}
+
+
+/*
+  Recalculate whenever the amount changes.
+*/
+
+amountInput.addEventListener(
+  "input",
+  calculateEMI
+);
+
+
+/*
+  Initial calculation.
+*/
+
+calculateEMI();
+
+</script>
+
+
 </body>
 </html>
+```
