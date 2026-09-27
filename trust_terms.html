@@ -547,43 +547,62 @@
   </main>
 
 
-  <!-- JAVASCRIPT -->
+ <script>
 
-  <script>
+  const acceptTerms =
+    document.getElementById("acceptTerms");
 
-    const acceptTerms =
-      document.getElementById("acceptTerms");
-
-    const payButton =
-      document.getElementById("payButton");
+  const payButton =
+    document.getElementById("payButton");
 
 
-    /* Enable button only after checkbox is selected */
+  /* Update button according to checkbox state */
 
-    acceptTerms.addEventListener(
-      "change",
-      function () {
+  function updatePayButton() {
 
-        payButton.disabled = !this.checked;
+    payButton.disabled = !acceptTerms.checked;
 
-      }
-    );
+  }
 
 
-    /* Redirect to Payment */
+  /* Enable/disable when checkbox is clicked */
 
-    function proceedToPayment() {
+  acceptTerms.addEventListener(
+    "change",
+    updatePayButton
+  );
 
-      if (!acceptTerms.checked) {
-        return;
-      }
 
-      window.location.href =
-        "trust_pay.html";
+  /* Check state when page loads */
 
+  document.addEventListener(
+    "DOMContentLoaded",
+    updatePayButton
+  );
+
+
+  /* Check state when returning to this page with Back button */
+
+  window.addEventListener(
+    "pageshow",
+    updatePayButton
+  );
+
+
+  /* Redirect to Payment */
+
+  function proceedToPayment() {
+
+    if (!acceptTerms.checked) {
+      return;
     }
 
-  </script>
+    window.location.href =
+      "trust_pay.html";
+
+  }
+
+</script>
 
 </body>
 </html>
