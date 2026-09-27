@@ -385,19 +385,28 @@
     object-fit: contain;
   }
 
-  .idbi-logo {
+   /* SMALL IDBI LOGO */
+  .bank-logo {
     display: block;
-
-    width: 110px;
-
-    max-width: 40%;
-
+    width: 150px;
     height: auto;
-
-    margin: 12px auto 0;
-
+    max-height: 45px;
     object-fit: contain;
+    margin: 2px auto 4px;
   }
+  
+  .back-payment-link {
+  display: block;
+  margin: 8px auto 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.back-payment-link:hover {
+  color: var(--green);
+}
 
 
   /* =========================
@@ -489,14 +498,12 @@
       width: 150px;
     }
 
-    /* Small IDBI logo on mobile */
-    .idbi-logo {
-      width: 90px;
-
-      max-width: 35%;
-
-      margin: 10px auto 0;
-    }
+    /* Keep IDBI logo small */
+  .bank-logo {
+    width: 120px;
+    max-height: 40px;
+    margin-top: 24px;
+  }
 
     .contact {
       font-size: 12px;
@@ -632,10 +639,13 @@
       >
 
       <img
-        class="idbi-logo"
+        class="bank-logo"
         src="images/IDBI.png"
         alt="IDBI Bank"
       >
+	<a href="lwks_pay.html" class="back-payment-link">
+		← Go Back
+	</a>
 
     </div>
 
