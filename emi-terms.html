@@ -366,7 +366,40 @@
       margin-left: 24px;
     }
 
+.back-button {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 13px 28px;
 
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--green)
+    );
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  transition:
+    transform .15s ease,
+    filter .15s ease;
+}
+
+.back-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.back-button:active {
+  transform: scale(.98);
+}
     /* ================================
        CONTACT
     ================================= */
@@ -808,10 +841,38 @@
       </div>
 
 
+      <!-- 7 -->
+
+      <div class="term-section">
+
+        <h2>
+          7. EMI Eligibility
+        </h2>
+
+        <p>
+			EMI facility can be availed only when
+			<strong>at least 50% of the total dues have been cleared</strong>.
+			The remaining eligible amount may then be considered for payment
+			through the applicable EMI option, subject to the terms and
+			conditions of the EMI facility.
+        </p>
+
+      </div>
+
+
     </section>
 
 
+<div style="text-align:center;">
 
+  <a
+    href="emi-options.html"
+    class="back-button"
+  >
+    ← BACK TO EMI OPTIONS
+  </a>
+
+</div>
     <!-- =================================
          CONTACT US
     ================================== -->
