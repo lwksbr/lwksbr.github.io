@@ -28,7 +28,7 @@ button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:point
 <section class="card">
   <h2>1. Report details</h2>
   <div class="grid">
-    <div class="field"><label for="healer">Healer name</label><input id="healer" maxlength="30" placeholder="Enter healer's full name" aria-describedby="healerStatus"><div id="healerStatus" class="status" aria-live="polite">Maximum 30 characters.</div></div>
+    <div class="field"><label for="healer">Healer name</label><input id="healer" minlength="3" maxlength="30" required placeholder="Enter healer's full name (3–30 characters)" aria-describedby="healerStatus"><div id="healerStatus" class="status" aria-live="polite">Enter 3–30 characters.</div></div>
     <div class="field"><label for="month">Month</label><select id="month"></select></div>
     <div class="field"><label for="year">Year</label><select id="year"><option>2026</option><option>2027</option><option>2028</option></select></div>
     <div class="field"><label for="currency">Amounts</label><select id="currency"><option value="₹">Indian Rupees (₹)</option><option value="">Numbers only</option></select></div>
@@ -54,13 +54,15 @@ button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:point
 
 <section class="card">
   <div class="actions" style="justify-content:space-between;align-items:center;margin-top:0;margin-bottom:24px">
-    <h2 style="margin:0">3. Review detailed healing log</h2>
+    <h2 style="margin:0" id="logTable">3. Review detailed healing log</h2>
+    <button id="goDownBtn" class="secondary hidden" type="button">Go down to last row ↓</button>
     <button id="processBtnTop" class="hidden">Validate dates &amp; prepare summary</button>
   </div>
   <div class="table-wrap">
-    <table id="logTable"><thead><tr><th>Date of Healing</th><th>Name of Patient</th><th>Number of Healing</th><th>Rate per Healing</th><th>Action</th></tr></thead><tbody id="logBody"><tr><td colspan="5" class="no-data">Import or add healing data to begin.</td></tr></tbody></table>
+    <table><thead><tr><th>Date of Healing</th><th>Name of Patient</th><th>Number of Healing</th><th>Rate per Healing</th><th>Action</th></tr></thead><tbody id="logBody"><tr><td colspan="5" class="no-data">Import or add healing data to begin.</td></tr></tbody></table>
   </div>
   <div class="actions" style="margin-top:14px">
+    <button id="addRowBtnBottom" class="secondary hidden">Add row</button>
     <button id="processBtn" class="hidden">Validate dates &amp; prepare summary</button>
   </div>
   <div id="logStatus" class="status" aria-live="polite"></div>
@@ -71,7 +73,7 @@ button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:point
     <h2 style="margin:0">4. Summary preview &amp; deductions</h2>
     <button id="pdfBtn">Generate &amp; download PDF</button>
   </div>
-  <div class="notice">Check patient names and totals. Deductions can be entered per patient. The Net Total column is intentionally not calculated and will remain blank in the PDF.</div>
+  <div class="notice">Check patient names and totals. Deductions can be entered per patient.</div>
   <div class="totals" id="totals"></div>
   <div class="table-wrap" style="margin-top:12px">
     <table class="summary-table" id="summaryTable">
@@ -86,7 +88,6 @@ button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:point
       <option value="blank">Leave all Deductions cells blank</option>
     </select>
   </div>
-  <div class="notice" style="margin-top:12px"><b>Transfer line retained exactly:</b> “Amount to be transferred (50% of Net Total Amount):” No transfer amount will be calculated or filled in.</div>
   <div class="actions">
     <button id="pdfBtnBottom">Generate &amp; download PDF</button>
     <button class="secondary" id="backBtn">Back to healing log</button>
@@ -122,15 +123,14 @@ function cleanNumeric(v){
  return Number(String(v??'').replace(/^[¹²³⁴⁵⁶⁷⁸⁹⁰]+/,'').replace(/[₹,$,\s]/g,'').replace(/,/g,'').trim())||0;
 }
 function setStatus(id,msg){$(id).textContent=msg}
+function normalizeName(value){return String(value??'').trim().slice(0,30)}
+function validName(value){const n=String(value??'').trim();return n.length>=3&&n.length<=30}
 $('healer').addEventListener('input',()=>{
-  const value=$('healer').value;
-  if(value.length>30){
-    $('healerStatus').textContent='Error: Healer name must not exceed 30 characters. Please enter the name again.';
-    $('healerStatus').style.color='#b42318';
-  }else{
-    $('healerStatus').textContent=`${value.length}/30 characters`;
-    $('healerStatus').style.color='';
-  }
+  const el=$('healer');
+  if(el.value.length>30)el.value=el.value.slice(0,30);
+  const value=el.value.trim();
+  if(value.length>0&&value.length<3){$('healerStatus').textContent='Error: Healer name must contain at least 3 characters.';$('healerStatus').style.color='#b42318';}
+  else {$('healerStatus').textContent=`${value.length}/30 characters${value.length<3?' (minimum 3)':''}`;$('healerStatus').style.color=value.length<3?'#b42318':'';}
 });
 function normHeader(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
 function findCol(headers,aliases){return headers.findIndex(h=>aliases.includes(normHeader(h)))}
@@ -150,30 +150,44 @@ function readMatrix(matrix){
  const ci=findCol(headers,['numberofhealing','numberofhealings','noofhealing','noofhealings','healings','number']);
  const ri=findCol(headers,['rateperhealing','rate','amountperhealing']);
  if([di,ni,ci,ri].some(i=>i<0))throw new Error('Could not identify all four columns. Use headers: Date of Healing, Name of Patient, Number of Healing, Rate per Healing.');
- return matrix.slice(1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>({date:parseDate(r[di]),name:String(r[ni]??'').trim(),count:Number(r[ci]||0),rate:cleanNumeric(r[ri])}));
+ return matrix.slice(1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>({date:parseDate(r[di]),name:normalizeName(r[ni]),count:Number(r[ci]||0),rate:cleanNumeric(r[ri])}));
 }
 function renderLog(){
  const body=$('logBody');body.innerHTML='';
  if(!rows.length){body.innerHTML='<tr><td colspan="5" class="no-data">Import or add healing data to begin.</td></tr>';return}
  rows.forEach((r,i)=>{
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="date" aria-label="Date of Healing" value="${esc(r.date)}" data-i="${i}" data-k="date"></td><td><input aria-label="Name of Patient" value="${esc(r.name)}" data-i="${i}" data-k="name"></td><td><input type="number" min="0" step="1" aria-label="Number of Healing" value="${esc(r.count)}" data-i="${i}" data-k="count"></td><td><input type="number" min="0" step="1000" aria-label="Rate per Healing" value="${esc(r.rate)}" data-i="${i}" data-k="rate"></td><td><button class="danger" data-remove="${i}">Remove</button></td>`;
+  tr.innerHTML=`<td><input type="date" aria-label="Date of Healing" value="${esc(r.date)}" data-i="${i}" data-k="date"></td><td><input aria-label="Name of Patient" minlength="3" maxlength="30" required value="${esc(r.name)}" data-i="${i}" data-k="name"></td><td><input type="number" min="0" step="1" aria-label="Number of Healing" value="${esc(r.count)}" data-i="${i}" data-k="count"></td><td><input type="number" min="0" step="1000" aria-label="Rate per Healing" value="${esc(r.rate)}" data-i="${i}" data-k="rate"></td><td><button class="danger" data-remove="${i}">Remove</button></td>`;
   body.appendChild(tr);
  });
- body.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;rows[i][k]=k==='count'||k==='rate'?Number(e.target.value):e.target.value;if(k==='name')rows[i].name=rows[i].name.trim()}));
+ body.querySelectorAll('input').forEach(inp=>{if(inp.dataset.k==='name')inp.addEventListener('input',e=>{if(e.target.value.length>30)e.target.value=e.target.value.slice(0,30)});inp.addEventListener('change',e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;rows[i][k]=k==='count'||k==='rate'?Number(e.target.value):k==='name'?normalizeName(e.target.value):e.target.value;if(k==='name')e.target.value=rows[i].name;});});
  body.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{rows.splice(+b.dataset.remove,1);renderLog()}));
 }
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function addRows(newRows){
+ let mode='add';
+ if(rows.length){
+  const choice=window.prompt('Healing data already exists. Choose an action:\nA = Add imported rows to current data\nO = Overwrite current data with imported rows\nC = Cancel import','C');
+  if(choice===null||!['C','CANCEL','A','ADD','O','OVERWRITE'].includes(choice.trim().toUpperCase())){
+   setStatus('importStatus','Import cancelled. Existing data was not changed.');return false;
+  }
+  const selected=choice.trim().toUpperCase();
+  if(selected==='C'||selected==='CANCEL'){setStatus('importStatus','Import cancelled. Existing data was not changed.');return false;}
+  mode=(selected==='O'||selected==='OVERWRITE')?'overwrite':'add';
+ }
  const selectedYear=+$('year').value,selectedMonth=+$('month').value;
- const matching=newRows.filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
- const removed=newRows.length-matching.length;
- // Keep the displayed log aligned with the selected reporting month/year.
+ const normalizedRows=newRows.map(r=>({...r,name:normalizeName(r.name)}));
+ const matching=normalizedRows.filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
+ const removed=normalizedRows.length-matching.length;
+ // Overwrite clears the existing log; Add appends to it. Only selected-month rows are retained.
+ if(mode==='overwrite') rows=[];
  rows=rows.concat(matching).filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
  preparedRows=[];summaryRows=[];renderLog();
- $('processBtn').classList.toggle('hidden',rows.length===0);$('processBtnTop').classList.toggle('hidden',rows.length===0);
+ const hasRows=rows.length>0;
+ ['processBtn','processBtnTop','addRowBtn','addRowBtnBottom','goDownBtn'].forEach(id=>$(id).classList.toggle('hidden',!hasRows));
  $('summarySection').classList.add('hidden');
- setStatus('importStatus',`${matching.length} row(s) imported for ${monthNames[selectedMonth-1]} ${selectedYear}; ${removed} row(s) removed because they are outside the selected month/year. Total matching rows: ${rows.length}.`);
+ setStatus('importStatus',`${matching.length} row(s) ${mode==='overwrite'?'imported (previous data overwritten)':'imported'} for ${monthNames[selectedMonth-1]} ${selectedYear}; ${removed} row(s) removed because they are outside the selected month/year. Names longer than 30 characters were shortened automatically. Total matching rows: ${rows.length}.`);
+ return true;
 }
 $('file').addEventListener('change',async e=>{
  const f=e.target.files[0];if(!f)return;
@@ -181,22 +195,29 @@ $('file').addEventListener('change',async e=>{
   let matrix;
   if(/\.csv$/i.test(f.name)){const text=await f.text();matrix=text.trim().split(/\r?\n/).map(line=>line.split('\t').length>1?line.split('\t'):line.split(','));}
   else {if(!window.XLSX)throw new Error('Excel reader did not load. Check internet connection or upload CSV.');const wb=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true});matrix=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true});}
-  addRows(readMatrix(matrix));setStatus('importStatus',`${$('importStatus').textContent} Source: ${f.name}. Please check dates and patient names.`);
+  const imported=addRows(readMatrix(matrix));if(imported){setStatus('importStatus',`${$('importStatus').textContent} Source: ${f.name}. Please check dates and patient names.`);$('file').value='';}
  }catch(err){setStatus('importStatus','Import error: '+err.message)}
 });
 $('importBtn').addEventListener('click',()=>{
- try{const raw=$('paste').value.trim();if(!raw)throw new Error('Paste your data first.');const matrix=raw.split(/\r?\n/).map(line=>line.includes('\t')?line.split('\t'):line.split(','));addRows(readMatrix(matrix));}
+ try{const raw=$('paste').value.trim();if(!raw)throw new Error('Paste your data first.');const matrix=raw.split(/\r?\n/).map(line=>line.includes('\t')?line.split('\t'):line.split(','));if(addRows(readMatrix(matrix))){$('paste').value='';$('file').value='';}}
  catch(err){setStatus('importStatus','Import error: '+err.message)}
 });
 $('sampleBtn').addEventListener('click',()=>{addRows([{date:`${$('year').value}-${$('month').value}-03`,name:'Patient A',count:2,rate:500},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient B',count:3,rate:400},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient A',count:1,rate:500}]);setStatus('importStatus','Sample rows added. Delete these before using real reports.')});
-$('addRowBtn').addEventListener('click',()=>{rows.push({date:`${$('year').value}-${$('month').value}-01`,name:'',count:1,rate:0});renderLog();$('processBtn').classList.remove('hidden');$('processBtnTop').classList.remove('hidden');$('summarySection').classList.add('hidden')});
-$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('summarySection').classList.add('hidden');setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
+function addBlankRow(){rows.push({date:`${$('year').value}-${$('month').value}-01`,name:'',count:1,rate:0});renderLog();$('processBtn').classList.remove('hidden');$('processBtnTop').classList.remove('hidden');$('addRowBtn').classList.remove('hidden');$('addRowBtnBottom').classList.remove('hidden');$('goDownBtn').classList.remove('hidden');$('summarySection').classList.add('hidden')}
+$('addRowBtn').addEventListener('click',addBlankRow);$('addRowBtnBottom').addEventListener('click',addBlankRow);
+$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('addRowBtn').classList.add('hidden');$('addRowBtnBottom').classList.add('hidden');$('goDownBtn').classList.add('hidden');$('summarySection').classList.add('hidden');$('paste').value='';$('file').value='';setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
 function processData(){
+ // Remove blank patient rows from both the data model and the visible log before validating.
+ rows=rows.filter(r=>String(r.name??'').trim()!=='');
+ rows=rows.map(r=>({...r,name:normalizeName(r.name)}));
+ renderLog();
  const year=+$('year').value,month=+$('month').value;
- const valid=rows.filter(r=>r.date&&r.name.trim()&&Number.isFinite(+r.count)&&+r.count>=0&&Number.isFinite(+r.rate)&&+r.rate>=0);
+ const invalidNames=rows.filter(r=>!validName(r.name));
+ if(invalidNames.length){setStatus('logStatus','Patient names must contain 3–30 characters. Please correct the patient names before preparing the summary.');return;}
+ const valid=rows.filter(r=>r.date&&validName(r.name)&&Number.isFinite(+r.count)&&+r.count>=0&&Number.isFinite(+r.rate)&&+r.rate>=0);
  const inMonth=valid.filter(r=>{const d=parseDate(r.date);return d&&+d.slice(0,4)===year&&+d.slice(5,7)===month});
  const discarded=rows.length-inMonth.length;
- preparedRows=inMonth.map(r=>({...r,date:parseDate(r.date),name:r.name.trim()})).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+ preparedRows=inMonth.map(r=>({...r,date:parseDate(r.date),name:normalizeName(r.name)})).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
  if(!preparedRows.length){setStatus('logStatus','No valid rows found for the selected month and year. Check the dates and data.');$('summarySection').classList.add('hidden');return}
  // Aggregate on exact reviewed spelling; user can correct near-duplicates in the editable log before processing.
  const map=new Map();
@@ -220,6 +241,7 @@ function renderSummary(){
  $('totals').innerHTML=`<div class="pill">Patients: <b>${summaryRows.length}</b></div><div class="pill">Total healings: <b>${count}</b></div><div class="pill">Gross total: <b>${$('currency').value}${money(gross)}</b></div>`;
 }
 $('backBtn').addEventListener('click',()=>{document.querySelector('#logTable').scrollIntoView({behavior:'smooth',block:'start'})});
+$('goDownBtn').addEventListener('click',()=>{const body=$('logBody');const lastRow=body.querySelector('tr:last-child');if(lastRow)lastRow.scrollIntoView({behavior:'smooth',block:'end'});});
 function safeFile(s){return String(s||'').trim().replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'')||'Healer'}
 async function makePDF(){
  const healer=$('healer').value.trim();
@@ -253,7 +275,7 @@ async function makePDF(){
  const pageW=210,pageH=297,margin=23,contentW=pageW-margin*2;
  const purple=[126,98,164],light=[238,231,246],border=[215,202,230],ink=[48,40,57];
  const month=monthNames[+$('month').value-1],year=$('year').value,currency=$('currency').value;
- const title=`${healer.toUpperCase()} - SUMMARY FOR THE MONTH OF ${month.toUpperCase()}, ${year}`;
+ const title=`${healer.toUpperCase()} - HEALER SUMMARY FOR THE MONTH OF ${month.toUpperCase()}, ${year}`;
  function topHeader(first=false){
   if(first){doc.setFont(pdfFont,'bold');doc.setFontSize(15);doc.setTextColor(...purple);doc.text('LIGHTWORKERS BRAHAMAPUTRA',pageW/2,18,{align:'center'});doc.setFontSize(9);doc.setTextColor(...ink);doc.text(title,pageW/2,25,{align:'center'});return 32}
   return 18;
