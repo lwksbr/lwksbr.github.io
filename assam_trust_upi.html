@@ -604,8 +604,8 @@
 
   <!-- UPI ID -->
 
-  <p class="upi-copy-title">
-    OR COPY AND PASTE THE UPI ID IN YOUR PREFERRED APP
+ <p class="upi-copy-title">
+    OR COPY AND PASTE THE UPI ID/PHONE NO. IN YOUR PREFERRED APP
   </p>
 
   <div class="upi-row">
@@ -616,11 +616,27 @@
 
     <button
       class="copy-upi-btn"
-      onclick="copyUPI(this)"
+      onclick="copyUPI(this, 'upiId')"
     >
       Copy
     </button>
 
+  </div>
+<!-- UPI PHONE NUMBER
+  <div class="upi-row">
+
+    <p class="upi-id" id="upiPhone">
+      6200697802
+    </p>
+
+    <button
+      class="copy-upi-btn"
+      onclick="copyUPI(this, 'upiPhone')"
+    >
+      Copy
+    </button>    
+
+  </div> -->
   </div>
 
 </div>
@@ -675,11 +691,10 @@
 /* =========================
    COPY UPI ID
    ========================= */
-
-async function copyUPI(button) {
+async function copyUPI(button, targetId) {
 
   const value =
-    document.getElementById("upiId")
+    document.getElementById(targetId)
     .textContent
     .trim();
 
