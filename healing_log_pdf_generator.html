@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Healing Log to PDF Generator | Lightworkers Brahamaputra</title>
+<style>
+:root{--purple:#8062a8;--purple-dark:#5f467f;--lavender:#eee7f6;--lavender2:#f8f5fb;--border:#d9cce8;--ink:#2d2636;--muted:#6d6576;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f7f5fa;color:var(--ink);font:15px/1.45 Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,#eee7f6,#fff);border-bottom:1px solid var(--border);padding:26px 20px;text-align:center}
+header h1{margin:0;color:var(--purple-dark);font-size:clamp(21px,3vw,30px);letter-spacing:.04em}header p{margin:6px 0 0;color:var(--muted)}
+main{max-width:1200px;margin:22px auto;padding:0 16px 40px}.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 3px 14px #4430550a}
+h2{font-size:19px;color:var(--purple-dark);margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-weight:700;font-size:13px;color:#51465e}
+input,select,textarea,button{font:inherit}input,select,textarea{border:1px solid #cfc4dc;border-radius:8px;padding:10px;background:white;color:var(--ink);width:100%;min-width:0}input:focus,select:focus,textarea:focus{outline:2px solid #c6b1df;border-color:var(--purple)}
+textarea{min-height:130px;resize:vertical}.help{font-size:12px;color:var(--muted);margin-top:5px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer;background:var(--purple);color:white}button:hover{background:var(--purple-dark)}button.secondary{background:#eee7f6;color:#503b6e;border:1px solid var(--border)}button.danger{background:#f8e9ed;color:#8a3146;border:1px solid #edc8d1}button:disabled{opacity:.5;cursor:not-allowed}
+.status{margin-top:10px;color:var(--muted);font-size:13px}.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th{background:var(--lavender);color:#4e3b65;text-align:left;font-weight:700}th,td{padding:9px 10px;border-bottom:1px solid #e8e0ef}tbody tr:nth-child(even){background:#fcfaff}td input{min-width:95px;padding:7px}.summary-table td input{min-width:90px}.totals{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}.pill{background:var(--lavender2);border:1px solid var(--border);padding:9px 12px;border-radius:9px}.pill b{color:var(--purple-dark)}.notice{background:#faf7fd;border-left:4px solid var(--purple);padding:11px 13px;border-radius:5px;color:#574968;font-size:13px}.hidden{display:none!important}.small{font-size:12px;color:var(--muted)}.right{text-align:right}.no-data{text-align:center;padding:25px;color:var(--muted)}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:15px}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}header{padding:20px 12px}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>LIGHTWORKERS BRAHAMAPUTRA</h1>
+  <p>Monthly Healing Log to PDF Generator</p>
+</header>
+<main>
+<section class="card">
+  <h2>1. Report details</h2>
+  <div class="grid">
+    <div class="field"><label for="healer">Healer name</label><input id="healer" maxlength="30" placeholder="Enter healer's full name" aria-describedby="healerStatus"><div id="healerStatus" class="status" aria-live="polite">Maximum 30 characters.</div></div>
+    <div class="field"><label for="month">Month</label><select id="month"></select></div>
+    <div class="field"><label for="year">Year</label><select id="year"><option>2026</option><option>2027</option><option>2028</option></select></div>
+    <div class="field"><label for="currency">Amounts</label><select id="currency"><option value="₹">Indian Rupees (₹)</option><option value="">Numbers only</option></select></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>2. Import or enter healing data</h2>
+  <p class="small">Required columns: Date of Healing, Name of Patient, Number of Healing, Rate per Healing. CSV and Excel files are supported. Dates outside the selected month are removed when you process the data.</p>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="field"><label for="file">Upload Excel or CSV</label><input type="file" id="file" accept=".csv,.xlsx,.xls"></div>
+    <div class="field"><label for="paste">Or paste tabular data</label><textarea id="paste" placeholder="Date of Healing&#9;Name of Patient&#9;Number of Healing&#9;Rate per Healing"></textarea></div>
+  </div>
+  <div class="actions">
+    <button id="importBtn">Import pasted data</button>
+    <button class="secondary" id="sampleBtn">Load sample data</button>
+    <button class="secondary" id="addRowBtn">Add row</button>
+    <button class="secondary" id="clearBtn">Clear data</button>
+  </div>
+  <div id="importStatus" class="status" aria-live="polite">No data imported yet.</div>
+  <div class="notice" style="margin-top:12px">Review patient spellings in the editable detailed log before creating the summary. Rows dated outside the selected month/year are excluded.</div>
+</section>
+
+<section class="card">
+  <div class="actions" style="justify-content:space-between;align-items:center;margin-top:0;margin-bottom:24px">
+    <h2 style="margin:0">3. Review detailed healing log</h2>
+    <button id="processBtnTop" class="hidden">Validate dates &amp; prepare summary</button>
+  </div>
+  <div class="table-wrap">
+    <table id="logTable"><thead><tr><th>Date of Healing</th><th>Name of Patient</th><th>Number of Healing</th><th>Rate per Healing</th><th>Action</th></tr></thead><tbody id="logBody"><tr><td colspan="5" class="no-data">Import or add healing data to begin.</td></tr></tbody></table>
+  </div>
+  <div class="actions" style="margin-top:14px">
+    <button id="processBtn" class="hidden">Validate dates &amp; prepare summary</button>
+  </div>
+  <div id="logStatus" class="status" aria-live="polite"></div>
+</section>
+
+<section class="card hidden" id="summarySection">
+  <div class="actions" style="justify-content:space-between;align-items:center;margin-top:0">
+    <h2 style="margin:0">4. Summary preview &amp; deductions</h2>
+    <button id="pdfBtn">Generate &amp; download PDF</button>
+  </div>
+  <div class="notice">Check patient names and totals. Deductions can be entered per patient. The Net Total column is intentionally not calculated and will remain blank in the PDF.</div>
+  <div class="totals" id="totals"></div>
+  <div class="table-wrap" style="margin-top:12px">
+    <table class="summary-table" id="summaryTable">
+      <thead><tr><th>S No</th><th>Name</th><th>No of Healings</th><th>Amount Per Healing</th><th>Gross Total</th><th>Deductions (editable)</th><th>Net Total</th></tr></thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+  </div>
+  <div class="field" style="margin-top:15px;max-width:600px">
+    <label for="deductionMode">Deductions in the PDF</label>
+    <select id="deductionMode">
+      <option value="entered">Include the deduction values entered above</option>
+      <option value="blank">Leave all Deductions cells blank</option>
+    </select>
+  </div>
+  <div class="notice" style="margin-top:12px"><b>Transfer line retained exactly:</b> “Amount to be transferred (50% of Net Total Amount):” No transfer amount will be calculated or filled in.</div>
+  <div class="actions">
+    <button id="pdfBtnBottom">Generate &amp; download PDF</button>
+    <button class="secondary" id="backBtn">Back to healing log</button>
+  </div>
+  <p class="small">PDF filename: [Healer_Name]_[Month]_[Year]_Summary.pdf</p>
+</section>
+<footer class="small" style="text-align:center;padding:10px">Runs in your browser. Imported records are processed locally by this page.</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script>
+const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const monthEl=document.getElementById('month');
+monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=String(i+1).padStart(2,'0');o.textContent=m;monthEl.appendChild(o)});
+// Default to the previous calendar month using India Standard Time (IST).
+const yearEl=document.getElementById('year');
+const istParts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+const istYear=Number(istParts.find(p=>p.type==='year').value);
+const istMonth=Number(istParts.find(p=>p.type==='month').value);
+const previousMonthDate=new Date(Date.UTC(istYear,istMonth-2,1));
+const defaultYear=previousMonthDate.getUTCFullYear();
+const defaultMonth=String(previousMonthDate.getUTCMonth()+1).padStart(2,'0');
+yearEl.innerHTML='';
+for(let y=defaultYear-1;y<=defaultYear+3;y++){const option=document.createElement('option');option.value=String(y);option.textContent=String(y);yearEl.appendChild(option)}
+monthEl.value=defaultMonth;
+yearEl.value=String(defaultYear);
+let rows=[], preparedRows=[], summaryRows=[];
+const $=id=>document.getElementById(id);
+// Report amounts are displayed as whole numbers: no grouping commas or decimal places.
+const money=n=>String(Math.round(Number(n||0)));
+function cleanNumeric(v){
+ return Number(String(v??'').replace(/^[¹²³⁴⁵⁶⁷⁸⁹⁰]+/,'').replace(/[₹,$,\s]/g,'').replace(/,/g,'').trim())||0;
+}
+function setStatus(id,msg){$(id).textContent=msg}
+$('healer').addEventListener('input',()=>{
+  const value=$('healer').value;
+  if(value.length>30){
+    $('healerStatus').textContent='Error: Healer name must not exceed 30 characters. Please enter the name again.';
+    $('healerStatus').style.color='#b42318';
+  }else{
+    $('healerStatus').textContent=`${value.length}/30 characters`;
+    $('healerStatus').style.color='';
+  }
+});
+function normHeader(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+function findCol(headers,aliases){return headers.findIndex(h=>aliases.includes(normHeader(h)))}
+function parseDate(v){
+ if(v instanceof Date && !isNaN(v)) return `${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,'0')}-${String(v.getDate()).padStart(2,'0')}`;
+ if(typeof v==='number' && window.XLSX && XLSX.SSF){const d=XLSX.SSF.parse_date_code(v);if(d)return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`}
+ const s=String(v??'').trim(); if(!s)return '';
+ let m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/); if(m)return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+ m=s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$/);if(m){let a=+m[1],b=+m[2],y=+m[3];if(y<100)y+=2000;let day=a,mon=b;if(a<=12&&b>12){day=b;mon=a}else if(a<=12&&b<=12){day=a;mon=b}return `${y}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`}
+ const d=new Date(s);if(!isNaN(d))return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;return '';
+}
+function readMatrix(matrix){
+ if(!matrix||!matrix.length)throw new Error('No rows found.');
+ const headers=matrix[0].map(x=>String(x??'').trim());
+ const di=findCol(headers,['dateofhealing','date','healingdate']);
+ const ni=findCol(headers,['nameofpatient','patientname','name','patient']);
+ const ci=findCol(headers,['numberofhealing','numberofhealings','noofhealing','noofhealings','healings','number']);
+ const ri=findCol(headers,['rateperhealing','rate','amountperhealing']);
+ if([di,ni,ci,ri].some(i=>i<0))throw new Error('Could not identify all four columns. Use headers: Date of Healing, Name of Patient, Number of Healing, Rate per Healing.');
+ return matrix.slice(1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>({date:parseDate(r[di]),name:String(r[ni]??'').trim(),count:Number(r[ci]||0),rate:cleanNumeric(r[ri])}));
+}
+function renderLog(){
+ const body=$('logBody');body.innerHTML='';
+ if(!rows.length){body.innerHTML='<tr><td colspan="5" class="no-data">Import or add healing data to begin.</td></tr>';return}
+ rows.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input type="date" aria-label="Date of Healing" value="${esc(r.date)}" data-i="${i}" data-k="date"></td><td><input aria-label="Name of Patient" value="${esc(r.name)}" data-i="${i}" data-k="name"></td><td><input type="number" min="0" step="1" aria-label="Number of Healing" value="${esc(r.count)}" data-i="${i}" data-k="count"></td><td><input type="number" min="0" step="1000" aria-label="Rate per Healing" value="${esc(r.rate)}" data-i="${i}" data-k="rate"></td><td><button class="danger" data-remove="${i}">Remove</button></td>`;
+  body.appendChild(tr);
+ });
+ body.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;rows[i][k]=k==='count'||k==='rate'?Number(e.target.value):e.target.value;if(k==='name')rows[i].name=rows[i].name.trim()}));
+ body.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{rows.splice(+b.dataset.remove,1);renderLog()}));
+}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function addRows(newRows){
+ const selectedYear=+$('year').value,selectedMonth=+$('month').value;
+ const matching=newRows.filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
+ const removed=newRows.length-matching.length;
+ // Keep the displayed log aligned with the selected reporting month/year.
+ rows=rows.concat(matching).filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
+ preparedRows=[];summaryRows=[];renderLog();
+ $('processBtn').classList.toggle('hidden',rows.length===0);$('processBtnTop').classList.toggle('hidden',rows.length===0);
+ $('summarySection').classList.add('hidden');
+ setStatus('importStatus',`${matching.length} row(s) imported for ${monthNames[selectedMonth-1]} ${selectedYear}; ${removed} row(s) removed because they are outside the selected month/year. Total matching rows: ${rows.length}.`);
+}
+$('file').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  let matrix;
+  if(/\.csv$/i.test(f.name)){const text=await f.text();matrix=text.trim().split(/\r?\n/).map(line=>line.split('\t').length>1?line.split('\t'):line.split(','));}
+  else {if(!window.XLSX)throw new Error('Excel reader did not load. Check internet connection or upload CSV.');const wb=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true});matrix=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true});}
+  addRows(readMatrix(matrix));setStatus('importStatus',`${$('importStatus').textContent} Source: ${f.name}. Please check dates and patient names.`);
+ }catch(err){setStatus('importStatus','Import error: '+err.message)}
+});
+$('importBtn').addEventListener('click',()=>{
+ try{const raw=$('paste').value.trim();if(!raw)throw new Error('Paste your data first.');const matrix=raw.split(/\r?\n/).map(line=>line.includes('\t')?line.split('\t'):line.split(','));addRows(readMatrix(matrix));}
+ catch(err){setStatus('importStatus','Import error: '+err.message)}
+});
+$('sampleBtn').addEventListener('click',()=>{addRows([{date:`${$('year').value}-${$('month').value}-03`,name:'Patient A',count:2,rate:500},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient B',count:3,rate:400},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient A',count:1,rate:500}]);setStatus('importStatus','Sample rows added. Delete these before using real reports.')});
+$('addRowBtn').addEventListener('click',()=>{rows.push({date:`${$('year').value}-${$('month').value}-01`,name:'',count:1,rate:0});renderLog();$('processBtn').classList.remove('hidden');$('processBtnTop').classList.remove('hidden');$('summarySection').classList.add('hidden')});
+$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('summarySection').classList.add('hidden');setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
+function processData(){
+ const year=+$('year').value,month=+$('month').value;
+ const valid=rows.filter(r=>r.date&&r.name.trim()&&Number.isFinite(+r.count)&&+r.count>=0&&Number.isFinite(+r.rate)&&+r.rate>=0);
+ const inMonth=valid.filter(r=>{const d=parseDate(r.date);return d&&+d.slice(0,4)===year&&+d.slice(5,7)===month});
+ const discarded=rows.length-inMonth.length;
+ preparedRows=inMonth.map(r=>({...r,date:parseDate(r.date),name:r.name.trim()})).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+ if(!preparedRows.length){setStatus('logStatus','No valid rows found for the selected month and year. Check the dates and data.');$('summarySection').classList.add('hidden');return}
+ // Aggregate on exact reviewed spelling; user can correct near-duplicates in the editable log before processing.
+ const map=new Map();
+ preparedRows.forEach(r=>{const key=r.name.trim();if(!map.has(key))map.set(key,{name:key,count:0,amount:0,rate:undefined,deduction:''});const s=map.get(key);s.count+=Number(r.count);s.amount+=Number(r.rate);const unitRate=Number(r.count)>0?Number(r.rate)/Number(r.count):Number(r.rate);if(s.rate===undefined)s.rate=unitRate;else if(Math.abs(s.rate-unitRate)>0.005)s.rate=null});
+ summaryRows=[...map.values()].sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+ renderSummary();
+ setStatus('logStatus',`${preparedRows.length} row(s) retained for ${monthNames[month-1]} ${year}; ${discarded} row(s) excluded for invalid data or dates outside the selected month.`);
+ $('summarySection').classList.remove('hidden');
+ $('summarySection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('processBtn').addEventListener('click',processData);$('processBtnTop').addEventListener('click',processData);
+function renderSummary(){
+ const body=$('summaryBody');body.innerHTML='';
+ summaryRows.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${i+1}</td><td>${esc(r.name)}</td><td>${r.count}</td><td>${r.rate===null?'Varies':money(r.rate)}</td><td>${money(r.amount)}</td><td><input type="number" min="0" step="1000" data-deduction="${i}" value="${esc(r.deduction)}" placeholder="Leave blank" aria-label="Deductions for ${esc(r.name)}"></td><td></td>`;
+  body.appendChild(tr);
+ });
+ body.querySelectorAll('[data-deduction]').forEach(inp=>inp.addEventListener('input',e=>{summaryRows[+e.target.dataset.deduction].deduction=e.target.value}));
+ const count=summaryRows.reduce((s,r)=>s+r.count,0),gross=summaryRows.reduce((s,r)=>s+r.amount,0);
+ $('totals').innerHTML=`<div class="pill">Patients: <b>${summaryRows.length}</b></div><div class="pill">Total healings: <b>${count}</b></div><div class="pill">Gross total: <b>${$('currency').value}${money(gross)}</b></div>`;
+}
+$('backBtn').addEventListener('click',()=>{document.querySelector('#logTable').scrollIntoView({behavior:'smooth',block:'start'})});
+function safeFile(s){return String(s||'').trim().replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'')||'Healer'}
+async function makePDF(){
+ const healer=$('healer').value.trim();
+ if(healer.length>30){
+   alert('Healer name must not exceed 30 characters. Please enter the name again.');
+   $('healerStatus').textContent='Error: Healer name must not exceed 30 characters. Please enter the name again.';
+   $('healerStatus').style.color='#b42318';
+   $('healer').focus();return;
+ }
+ if(!window.jspdf||!window.jspdf.jsPDF){alert('PDF library did not load. Please check your internet connection and reload this page.');return}
+ if(!healer){alert('Please enter the healer name.');$('healer').focus();return}
+ if(!preparedRows.length||!summaryRows.length){alert('Please prepare the summary first.');return}
+ const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+ // Load a Unicode font so the Indian rupee sign renders correctly in the PDF.
+ let unicodeFontReady=false;
+ try {
+   const fontUrl='https://raw.githubusercontent.com/google/fonts/main/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf';
+   const response=await fetch(fontUrl);
+   if(!response.ok) throw new Error('Font download failed');
+   const buffer=await response.arrayBuffer();
+   let binary=''; const bytes=new Uint8Array(buffer);
+   for(let i=0;i<bytes.length;i+=0x8000) binary+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));
+   doc.addFileToVFS('NotoSans.ttf',btoa(binary));
+   doc.addFont('NotoSans.ttf','NotoSans','normal');
+   doc.addFont('NotoSans.ttf','NotoSans','bold');
+   unicodeFontReady=true;
+ } catch(e) {
+   console.warn('Could not load Unicode font; PDF will use fallback font.',e);
+ }
+ const pdfFont=unicodeFontReady?'NotoSans':'helvetica';
+ const pageW=210,pageH=297,margin=23,contentW=pageW-margin*2;
+ const purple=[126,98,164],light=[238,231,246],border=[215,202,230],ink=[48,40,57];
+ const month=monthNames[+$('month').value-1],year=$('year').value,currency=$('currency').value;
+ const title=`${healer.toUpperCase()} - SUMMARY FOR THE MONTH OF ${month.toUpperCase()}, ${year}`;
+ function topHeader(first=false){
+  if(first){doc.setFont(pdfFont,'bold');doc.setFontSize(15);doc.setTextColor(...purple);doc.text('LIGHTWORKERS BRAHAMAPUTRA',pageW/2,18,{align:'center'});doc.setFontSize(9);doc.setTextColor(...ink);doc.text(title,pageW/2,25,{align:'center'});return 32}
+  return 18;
+ }
+ function tableOptions(startY,head,body,opts={}){doc.autoTable({startY,head:[head],body,theme:'grid',margin:{left:margin,right:margin,top:17,bottom:30},styles:{font:pdfFont,fontSize:8,cellPadding:2.2,textColor:ink,lineColor:border,lineWidth:.2,overflow:'linebreak'},headStyles:{fillColor:light,textColor:[79,59,102],fontStyle:'bold',lineColor:border},alternateRowStyles:{fillColor:[252,250,255]},...opts});}
+ // Detailed log first, sorted by date then patient name.
+ let y=topHeader(true);
+ doc.setFont(pdfFont,'bold');doc.setFontSize(10);doc.setTextColor(...purple);doc.text('DETAILED HEALING LOG',margin,y+3);
+ const displayDate=iso=>{const m=String(iso||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[3]}-${m[2]}-${m[1].slice(-2)}`:String(iso||'')};
+ const logBody=preparedRows.map(r=>[displayDate(r.date),r.name,String(r.count),`${currency}${money(r.rate)}`]);
+ tableOptions(y+6,['Date of Healing','Name of Patient','Number of Healing','Rate per Healing'],logBody,{columnStyles:{0:{cellWidth:32},1:{cellWidth:contentW-32-32-32},2:{cellWidth:32,halign:'center'},3:{cellWidth:32,halign:'right'}},didDrawPage:()=>{}});
+ let currentY=doc.lastAutoTable.finalY+10;
+ // Summary must be kept together. Estimate complete table height before deciding whether to move it.
+ const sumBody=summaryRows.map((r,i)=>[String(i+1),r.name,String(r.count),r.rate===null?'Varies':`${currency}${money(r.rate)}`,`${currency}${money(r.amount)}`,$('deductionMode').value==='blank'?'':(String(r.deduction??'').trim()?`${currency}${money(Number(r.deduction))}`:''),'']);
+ const sumHead=['S No','Name','No of Healings','Amount Per Healing','Gross Total','Deductions','Net Total'];
+ const approxHeader=9, approxRow=5.4+Math.max(0,...sumBody.map(r=>Math.ceil(String(r[1]).length/32)-1))*2.5;
+ const approxSummary=approxHeader+sumBody.length*approxRow+8+12+16;
+ if(currentY+approxSummary>pageH-24){doc.addPage();currentY=topHeader(false)}
+ // Keep summary together by using autoTable's pageBreak avoid; if estimated too tall, table may still paginate only for unusually huge patient lists.
+ doc.setFont(pdfFont,'bold');doc.setFontSize(10);doc.setTextColor(...purple);doc.text('FINAL SUMMARY',margin,currentY+2);
+ tableOptions(currentY+5,sumHead,sumBody,{pageBreak:'avoid',rowPageBreak:'avoid',styles:{font:pdfFont,fontSize:7.1,cellPadding:1.7,textColor:ink,lineColor:border,lineWidth:.2,overflow:'linebreak'},columnStyles:{0:{cellWidth:10,halign:'center'},1:{cellWidth:36},2:{cellWidth:22,halign:'center'},3:{cellWidth:27,halign:'right'},4:{cellWidth:25,halign:'right'},5:{cellWidth:23,halign:'right'},6:{cellWidth:21}},headStyles:{fillColor:light,textColor:[79,59,102],fontStyle:'bold',fontSize:6.7},});
+ let sy=doc.lastAutoTable.finalY;
+ const totalCount=summaryRows.reduce((s,r)=>s+r.count,0),totalGross=summaryRows.reduce((s,r)=>s+r.amount,0);
+ // Final total row with deductions and net total blank.
+ doc.autoTable({startY:sy,head:[],body:[['','TOTAL',String(totalCount),'',`${currency}${money(totalGross)}`,'','']],theme:'grid',margin:{left:margin,right:margin},styles:{font:pdfFont,fontSize:7.1,cellPadding:1.7,textColor:ink,lineColor:border,lineWidth:.2,fontStyle:'bold'},columnStyles:{0:{cellWidth:10},1:{cellWidth:36},2:{cellWidth:22,halign:'center'},3:{cellWidth:27},4:{cellWidth:25,halign:'right'},5:{cellWidth:23},6:{cellWidth:21}},});
+ sy=doc.lastAutoTable.finalY+8;
+ doc.setFont(pdfFont,'bold');doc.setFontSize(8.5);doc.setTextColor(...ink);
+ doc.text('Amount to be transferred (50% of Net Total Amount):',margin,sy);
+ sy+=15;
+ // Side-by-side signature lines directly below summary.
+ const half=(contentW-18)/2;
+ doc.setDrawColor(...purple);doc.setLineWidth(.3);
+ doc.line(margin,sy,margin+half,sy);doc.line(margin+half+18,sy,margin+half*2+18,sy);
+ doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(...ink);
+ doc.text(`HEALER (${healer.toUpperCase()})`,margin+half/2,sy+5,{align:'center'});
+ doc.text('LIGHTWORKERS BRAHAMAPUTRA',margin+half+18+half/2,sy+5,{align:'center'});
+ // Add healer signature line to pages that do not contain the summary.
+ const total=doc.getNumberOfPages();
+ for(let p=1;p<=total;p++){
+  doc.setPage(p);
+  if(p!==total){const yy=pageH-24;doc.setDrawColor(...purple);doc.setLineWidth(.3);doc.line(margin,yy,margin+58,yy);doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(...ink);doc.text('HEALER SIGNATURE',margin,yy+5)}
+  doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(100,91,110);doc.text(`Page ${p} of ${total}`,pageW/2,pageH-9,{align:'center'});
+ }
+ const filename=`${safeFile(healer)}_${month}_${year}_Summary.pdf`;
+ doc.save(filename);
+}
+$('pdfBtn').addEventListener('click',makePDF);$('pdfBtnBottom').addEventListener('click',makePDF);
+</script>
+</body>
+</html>
