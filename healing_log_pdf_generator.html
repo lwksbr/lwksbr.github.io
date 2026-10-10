@@ -184,9 +184,9 @@ function addRows(newRows){
  rows=rows.concat(matching).filter(r=>{const d=parseDate(r.date);return d&&Number(d.slice(0,4))===selectedYear&&Number(d.slice(5,7))===selectedMonth;});
  preparedRows=[];summaryRows=[];renderLog();
  const hasRows=rows.length>0;
- ['processBtn','processBtnTop','addRowBtn','addRowBtnBottom','goDownBtn'].forEach(id=>$(id).classList.toggle('hidden',!hasRows));
+ ['processBtn','processBtnTop','addRowBtnBottom','goDownBtn'].forEach(id=>$(id).classList.toggle('hidden',!hasRows));
  $('summarySection').classList.add('hidden');
- setStatus('importStatus',`${matching.length} row(s) ${mode==='overwrite'?'imported (previous data overwritten)':'imported'} for ${monthNames[selectedMonth-1]} ${selectedYear}; ${removed} row(s) removed because they are outside the selected month/year. Names longer than 30 characters were shortened automatically. Total matching rows: ${rows.length}.`);
+ setStatus('importStatus',`${matching.length} row(s) ${mode==='overwrite'?'imported (previous data overwritten)':'imported'} for ${monthNames[selectedMonth-1]} ${selectedYear}; ${removed} row(s) removed because they are outside the selected month/year. Total matching rows: ${rows.length}.`);
  return true;
 }
 $('file').addEventListener('change',async e=>{
@@ -203,9 +203,25 @@ $('importBtn').addEventListener('click',()=>{
  catch(err){setStatus('importStatus','Import error: '+err.message)}
 });
 $('sampleBtn').addEventListener('click',()=>{addRows([{date:`${$('year').value}-${$('month').value}-03`,name:'Patient A',count:2,rate:500},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient B',count:3,rate:400},{date:`${$('year').value}-${$('month').value}-12`,name:'Patient A',count:1,rate:500}]);setStatus('importStatus','Sample rows added. Delete these before using real reports.')});
-function addBlankRow(){rows.push({date:`${$('year').value}-${$('month').value}-01`,name:'',count:1,rate:0});renderLog();$('processBtn').classList.remove('hidden');$('processBtnTop').classList.remove('hidden');$('addRowBtn').classList.remove('hidden');$('addRowBtnBottom').classList.remove('hidden');$('goDownBtn').classList.remove('hidden');$('summarySection').classList.add('hidden')}
-$('addRowBtn').addEventListener('click',addBlankRow);$('addRowBtnBottom').addEventListener('click',addBlankRow);
-$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('addRowBtn').classList.add('hidden');$('addRowBtnBottom').classList.add('hidden');$('goDownBtn').classList.add('hidden');$('summarySection').classList.add('hidden');$('paste').value='';$('file').value='';setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
+function addBlankRow(){
+  rows.push({date:`${$('year').value}-${$('month').value}-01`,name:'',count:1,rate:0});
+  const addedIndex=rows.length-1;
+  renderLog();
+  $('processBtn').classList.remove('hidden');
+  $('processBtnTop').classList.remove('hidden');
+  $('addRowBtnBottom').classList.remove('hidden');
+  $('goDownBtn').classList.remove('hidden');
+  $('summarySection').classList.add('hidden');
+  // Scroll to the newly added row near the bottom so the row and controls below it are visible.
+  requestAnimationFrame(()=>{
+    const addedRow=$('logBody').querySelectorAll('tr')[addedIndex];
+    if(addedRow) addedRow.scrollIntoView({behavior:'smooth',block:'end'});
+    $('addRowBtnBottom').scrollIntoView({behavior:'smooth',block:'end'});
+  });
+}
+$('addRowBtn').addEventListener('click',addBlankRow);
+$('addRowBtnBottom').addEventListener('click',addBlankRow);
+$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('addRowBtnBottom').classList.add('hidden');$('goDownBtn').classList.add('hidden');$('summarySection').classList.add('hidden');$('paste').value='';$('file').value='';setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
 function processData(){
  // Remove blank patient rows from both the data model and the visible log before validating.
  rows=rows.filter(r=>String(r.name??'').trim()!=='');
@@ -241,7 +257,7 @@ function renderSummary(){
  $('totals').innerHTML=`<div class="pill">Patients: <b>${summaryRows.length}</b></div><div class="pill">Total healings: <b>${count}</b></div><div class="pill">Gross total: <b>${$('currency').value}${money(gross)}</b></div>`;
 }
 $('backBtn').addEventListener('click',()=>{document.querySelector('#logTable').scrollIntoView({behavior:'smooth',block:'start'})});
-$('goDownBtn').addEventListener('click',()=>{const body=$('logBody');const lastRow=body.querySelector('tr:last-child');if(lastRow)lastRow.scrollIntoView({behavior:'smooth',block:'end'});});
+$('goDownBtn').addEventListener('click',()=>{const body=$('logBody');const lastRow=body.querySelector('tr:last-child');if(lastRow)lastRow.scrollIntoView({behavior:'smooth',block:'start'});});
 function safeFile(s){return String(s||'').trim().replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'')||'Healer'}
 async function makePDF(){
  const healer=$('healer').value.trim();
