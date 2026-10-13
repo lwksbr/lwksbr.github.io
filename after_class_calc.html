@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment Voucher &amp; Invoice Generator | Lightworkers Brahamaputra Trust</title>
+<style>
+:root{--purple:#eee6f7;--purple2:#d9c5ed;--deep:#4d286c;--ink:#30263a;--muted:#70647a;--line:#ded3e8;--white:#fff;--green:#d7e8cc;--warn:#fff2d2;--danger:#a72b49}
+*{box-sizing:border-box}body{margin:0;background:#f8f5fb;color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.top{background:linear-gradient(135deg,#4d286c,#78539a);color:#fff;padding:28px 20px}.top-inner{max-width:1100px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:12px;opacity:.85}.top h1{margin:4px 0;font-size:clamp(24px,4vw,34px)}.top p{margin:4px 0 0;opacity:.9}.wrap{max-width:1100px;margin:24px auto;padding:0 16px 40px}.status{padding:10px 13px;border-radius:10px;background:#f0e8f8;border:1px solid var(--line);font-size:13px;margin-bottom:16px}.status.error{background:#fff0f2;color:var(--danger)}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 5px 18px #4d286c0b}.card h2{margin:0 0 14px;color:var(--deep);font-size:19px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}label{font-weight:650;font-size:13px}input,select,textarea{width:100%;border:1px solid #cfc1dd;border-radius:9px;background:#fff;color:var(--ink);padding:11px 12px;font:inherit;outline:none}input:focus,select:focus,textarea:focus{border-color:#8155a3;box-shadow:0 0 0 3px #8155a31c}textarea{min-height:155px;resize:vertical;line-height:1.55}.help{font-size:12px;color:var(--muted)}.radio-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.radio-card{border:1px solid var(--line);border-radius:12px;padding:13px;display:flex;gap:9px;align-items:flex-start;cursor:pointer;background:#fff}.radio-card:has(input:checked){background:var(--purple);border-color:#9874b7}.radio-card input{width:auto;margin-top:4px;accent-color:var(--deep)}.radio-card strong{display:block}.radio-card small{display:block;color:var(--muted);margin-top:2px}.hidden{display:none!important}.summary{background:#f4eef9;border:1px solid #d9c5ed;border-radius:12px;padding:16px}.summary .amount{font-size:28px;font-weight:800;color:var(--deep)}.summary-line{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:700;cursor:pointer}.primary{background:var(--deep);color:#fff}.secondary{background:#eee6f7;color:var(--deep);border:1px solid var(--line)}button:disabled{opacity:.45;cursor:not-allowed}.footer{font-size:12px;color:var(--muted);text-align:center;padding:12px}.pill{display:inline-block;border-radius:99px;background:#eee6f7;color:var(--deep);padding:3px 9px;font-size:12px;font-weight:700}.rate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.warning{background:var(--warn);border:1px solid #e8cd81;padding:10px 12px;border-radius:9px;font-size:13px;margin-top:10px}.counts{display:flex;gap:10px;flex-wrap:wrap}.count{background:#f6f2fa;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:13px}.required{color:#a72b49}
+@media(max-width:720px){.grid,.grid.three,.radio-grid,.rate-grid{grid-template-columns:1fr}.card{padding:16px}.top{padding:22px 16px}.wrap{margin-top:14px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="eyebrow">Lightworkers Brahamaputra Trust</div><h1>Payment Voucher  &amp; Invoice Generator</h1><p>Create royalty vouchers, trainer fee vouchers and recruiter fee invoices.</p></div></header>
+<main class="wrap">
+<!-- <div id="feeStatus" class="status">Built-in default fee rates are ready. You can edit rates for each voucher.</div> -->
+<form id="voucherForm" novalidate>
+<section class="card"><h2>1. Select document type</h2><div class="radio-grid">
+<label class="radio-card"><input type="radio" name="docType" value="royalty" checked><span><strong>Royalty to Assam Trust</strong><small>Payment Voucher (for Royalty)</small></span></label>
+<label class="radio-card"><input type="radio" name="docType" value="trainer"><span><strong>Trainer Fees Share</strong><small>Payment Voucher (for Trainer Fees)</small></span></label>
+<label class="radio-card"><input type="radio" name="docType" value="recruiter"><span><strong>Recruiter Centre Fees</strong><small>Invoice (for Recruiter Fees)</small></span></label>
+</div></section>
+<section class="card"><h2>2. Class and student details</h2><div class="grid">
+<div class="field"><label for="classSelect">Class <span class="required">*</span></label><select id="classSelect" required><option value="">Select a class</option></select></div>
+<div class="field hidden" id="otherClassWrap"><label for="otherClass">Other class name <span class="required">*</span></label><input id="otherClass" placeholder="Enter class name" autocomplete="off"></div>
+<div class="field"><label for="fromDate">From date <span class="required">*</span></label><input id="fromDate" placeholder="DD-MM-YY" maxlength="8" inputmode="numeric" required><span class="help">Example: 30-09-26</span></div>
+<div class="field"><label for="toDate">To date <span class="help">(optional)</span></label><input id="toDate" placeholder="DD-MM-YY (optional)" maxlength="8" inputmode="numeric"><span class="help">Leave blank for a single-day class. If entered, maximum normal date difference is 1 day.</span></div>
+<div class="field full"><div id="dateWarning" class="warning hidden"></div></div>
+<div class="field full"><label for="freshers">Fresher student names <span class="required">*</span></label><textarea id="freshers" placeholder="Enter one student name per line" required></textarea><div class="counts"><span class="count">Freshers: <strong id="fresherCount">0</strong></span></div><span class="help">Each non-empty line counts as one fresher. Blank lines are ignored.</span></div>
+<div class="field full"><label for="reviewers">Reviewer student names</label><textarea id="reviewers" placeholder="Enter one reviewer name per line (if any)"></textarea><div class="counts"><span class="count">Reviewers: <strong id="reviewerCount">0</strong></span></div><span class="help">Each non-empty line counts as one reviewer. Blank lines are ignored.</span></div>
+<div class="field" id="heldByWrap"><label>Class held by</label><input value="Lightworkers Brahamaputra Trust" readonly aria-readonly="true"></div>
+<div class="field hidden" id="centreNameWrap"><label for="centreNameSelect">Centre name <span class="required">*</span></label><select id="centreNameSelect"><option value="MCKS Pranic Healing Trust of Assam">MCKS Pranic Healing Trust of Assam</option><option value="__OTHER__">Other</option></select><input id="centreNameOther" class="hidden" placeholder="Enter centre name" autocomplete="off" style="margin-top:8px"></div>
+<div class="field"><label for="heldAt">Class held at</label><input id="heldAt" placeholder="Optional venue / location"></div>
+</div></section>
+<section class="card"><h2>3. Payment details</h2>
+<div id="trainerNameWrap" class="field hidden" style="margin-bottom:14px"><label for="trainerName">Trainer name <span class="required">*</span></label><input id="trainerName" placeholder="Enter trainer name"></div>
+<div class="rate-grid">
+<div class="field" id="royaltyRateWrap"><label for="royaltyRate">Royalty per fresher (₹) <span class="required">*</span></label><input id="royaltyRate" type="number" min="0" step="1" placeholder="Rate per fresher"></div>
+<div class="field hidden" id="trainerFreshRateWrap"><label for="trainerFreshRate">Trainer fee per fresher (₹) <span class="required">*</span></label><input id="trainerFreshRate" type="number" min="0" step="1" placeholder="Fresher rate"></div>
+<div class="field hidden" id="trainerReviewRateWrap"><label for="trainerReviewRate">Trainer fee per reviewer (₹) <span class="required">*</span></label><input id="trainerReviewRate" type="number" min="0" step="1" placeholder="Reviewer rate"></div>
+<div class="field hidden" id="recruiterRateWrap"><label for="recruiterRate">Recruiter fee per fresher (₹) <span class="required">*</span></label><input id="recruiterRate" type="number" min="0" step="1" placeholder="Recruiter rate"></div>
+</div>
+<div class="help" style="margin-top:10px">Rates are prefilled for listed classes and can be edited for this voucher. For an “Other” class, rates are left blank. Enter whole-number amounts only.</div>
+<div class="summary" style="margin-top:16px"><div class="summary-line"><span id="totalLabel">Total royalty payment</span><span class="amount" id="totalAmount">Rs. 0</span></div><div class="summary-line"><span>Freshers counted</span><strong id="summaryFreshers">0</strong></div><div class="summary-line" id="reviewerSummaryLine"><span>Reviewers counted</span><strong id="summaryReviewers">0</strong></div><div class="help" id="calculationNote">Total is calculated automatically from student counts and rates.</div></div>
+<div class="buttons"><button class="primary" id="generateBtn" type="button">Create & Download PDF</button><button class="secondary" id="resetBtn" type="reset">Clear form</button></div>
+</section>
+</form>
+<div class="footer">Local PDF generation · No student data is sent to a server. Ready for GitHub Pages. Keep <code>index.html</code> in your website folder.</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+'use strict';
+const DEFAULT_FEES = [
+ {name:'Basic Pranic Healing',royalty:1216,trainerFresh:1500,trainerReview:500,recruiter:1000},
+ {name:'Advanced Pranic Healing',royalty:1216,trainerFresh:1500,trainerReview:500,recruiter:1000},
+ {name:'Pranic Psychotherapy',royalty:1216,trainerFresh:1500,trainerReview:500,recruiter:1000},
+ {name:'Achieving Oneness With The Higher Soul',royalty:1369,trainerFresh:1500,trainerReview:750,recruiter:1500},
+ {name:'Pranic Crystal Healing',royalty:1216,trainerFresh:1250,trainerReview:375,recruiter:1500},
+ {name:'Psychic Self Defence',royalty:1216,trainerFresh:1250,trainerReview:375,recruiter:1500},
+ {name:'Arhatic Yoga Preparatory',royalty:3823,trainerFresh:1912,trainerReview:956,recruiter:1800}
+];
+let fees = [...DEFAULT_FEES];
+const $ = id => document.getElementById(id);
+const money = n => 'Rs. ' + Math.ceil(Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:0});
+function properCase(v){return String(v||'').trim().toLowerCase().replace(/(^|[\s\-/'’])([a-zà-öø-ÿ])/g,(_,a,b)=>a+b.toUpperCase());}
+function lines(id){return $(id).value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)}
+function selectedType(){return document.querySelector('input[name="docType"]:checked').value}
+function currentClass(){return $('classSelect').value==='__OTHER__'?properCase($('otherClass').value):$('classSelect').value}
+function populateClasses(){const s=$('classSelect');s.innerHTML='<option value="">Select a class</option>'+fees.map(f=>`<option value="${escapeHtml(f.name)}">${escapeHtml(f.name)}</option>`).join('')+'<option value="__OTHER__">Other</option>'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function setRate(id,value){$(id).value=value===undefined||!Number.isFinite(Number(value))?'':String(value)}
+function updateRates(){const name=$('classSelect').value;const f=fees.find(x=>x.name===name);if(name==='__OTHER__'||!f){['royaltyRate','trainerFreshRate','trainerReviewRate','recruiterRate'].forEach(id=>setRate(id,''));}else{setRate('royaltyRate',f.royalty);setRate('trainerFreshRate',f.trainerFresh);setRate('trainerReviewRate',f.trainerReview);setRate('recruiterRate',f.recruiter)}recalc()}
+function toggleType(){const t=selectedType();$('royaltyRateWrap').classList.toggle('hidden',t!=='royalty');$('trainerFreshRateWrap').classList.toggle('hidden',t!=='trainer');$('trainerReviewRateWrap').classList.toggle('hidden',t!=='trainer');$('recruiterRateWrap').classList.toggle('hidden',t!=='recruiter');$('trainerNameWrap').classList.toggle('hidden',t!=='trainer');$('heldByWrap').classList.toggle('hidden',t==='recruiter');$('centreNameWrap').classList.toggle('hidden',t!=='recruiter');$('reviewerSummaryLine').classList.toggle('hidden',t==='recruiter');$('totalLabel').textContent=t==='royalty'?'Total royalty payment':t==='trainer'?'Total trainer fees payment':'Total recruiter fees payment';recalc()}
+function recalc(){const fc=lines('freshers').length,rc=lines('reviewers').length; $('fresherCount').textContent=fc;$('reviewerCount').textContent=rc;$('summaryFreshers').textContent=fc;$('summaryReviewers').textContent=rc;const t=selectedType();let total=0;if(t==='royalty')total=fc*(Number($('royaltyRate').value)||0);if(t==='trainer')total=fc*(Number($('trainerFreshRate').value)||0)+rc*(Number($('trainerReviewRate').value)||0);if(t==='recruiter')total=fc*(Number($('recruiterRate').value)||0);$('totalAmount').textContent=money(total);$('calculationNote').textContent=t==='royalty'?`${fc} fresher(s) × ${money($('royaltyRate').value)} per fresher`:t==='trainer'?`${fc} fresher(s) × ${money($('trainerFreshRate').value)} + ${rc} reviewer(s) × ${money($('trainerReviewRate').value)}`:`${fc} fresher(s) × ${money($('recruiterRate').value)}. Recruiter fees apply to freshers only.`}
+function dateParse(s){if(!/^\d{2}-\d{2}-\d{2}$/.test(s))return null;const [d,m,y]=s.split('-').map(Number);const full=2000+y;const dt=new Date(Date.UTC(full,m-1,d));if(dt.getUTCFullYear()!==full||dt.getUTCMonth()!==m-1||dt.getUTCDate()!==d)return null;return dt}
+function diffDays(a,b){return Math.round((b-a)/86400000)}
+function dateRange(){const a=dateParse($('fromDate').value);const toValue=$('toDate').value.trim();if(!a)return {ok:false,msg:'Enter a valid From Date in DD-MM-YY format.'};const b=toValue?dateParse(toValue):a;if(!b)return {ok:false,msg:'Enter a valid To Date in DD-MM-YY format, or leave it blank.'};if(b<a)return {ok:false,msg:'To Date cannot be earlier than From Date.'};const diff=diffDays(a,b);if(diff>1&&!window.longClassApproved){$('dateWarning').textContent=`The dates are ${diff+1} calendar days inclusive (${diff} days apart). Please confirm whether the class lasted more than 2 days.`;$('dateWarning').classList.remove('hidden');const yes=confirm('The From and To dates are more than 1 day apart. Was the class more than 2 days?\n\nChoose Yes to confirm and continue, or No to return and correct the dates.');if(!yes)return {ok:false,msg:'Please correct the dates, or confirm the duration if the class was more than 2 days.'};window.longClassApproved=true;$('dateWarning').textContent='Long class duration confirmed by user.';}else if(diff<=1){window.longClassApproved=false;$('dateWarning').classList.add('hidden')}return {ok:true,a,b,diff}}
+function formatDate(dt){return String(dt.getUTCDate()).padStart(2,'0')+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dt.getUTCMonth()]+'-'+String(dt.getUTCFullYear()).slice(-2)}
+function filenameDate(dt){return String(dt.getUTCDate()).padStart(2,'0')+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dt.getUTCMonth()]+'-'+String(dt.getUTCFullYear()).slice(-2)}
+function cleanFilePart(s){return String(s).trim().replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_').replace(/_+/g,'_')}
+function getHeldBy(){if(selectedType()==='recruiter')return $('centreNameSelect').value==='__OTHER__'?properCase($('centreNameOther').value):'MCKS Pranic Healing Trust of Assam';return 'Lightworkers Brahamaputra Trust'}
+function getLocation(){const s=$('heldAt').value.trim();return s?properCase(s):''}
+function validate(){const t=selectedType();if(!$('classSelect').value){alert('Please select a class.');$('classSelect').focus();return null}if($('classSelect').value==='__OTHER__'&&!properCase($('otherClass').value)){alert('Please enter the other class name.');$('otherClass').focus();return null}const dates=dateRange();if(!dates.ok){alert(dates.msg);return null}if(!lines('freshers').length){alert('Enter at least one fresher student name.');$('freshers').focus();return null}if(t==='recruiter'&&$('centreNameSelect').value==='__OTHER__'&&!properCase($('centreNameOther').value)){alert('Please enter the Centre Name.');$('centreNameOther').focus();return null}if(t==='trainer'&&!properCase($('trainerName').value)){alert('Please enter the Trainer Name.');$('trainerName').focus();return null}const requiredRates=t==='royalty'?['royaltyRate']:t==='trainer'?['trainerFreshRate','trainerReviewRate']:['recruiterRate'];for(const id of requiredRates){if($(id).value===''||!Number.isFinite(Number($(id).value))||Number($(id).value)<0||!Number.isInteger(Number($(id).value))){alert('Enter a valid whole-number amount (no decimals) for each required fee field.');$(id).focus();return null}}return {t,dates,fc:lines('freshers'),rc:lines('reviewers'),className:currentClass(),heldBy:getHeldBy(),location:getLocation()}}
+function drawHeader(doc,title){const w=doc.internal.pageSize.getWidth();doc.setFillColor(241,233,249);doc.rect(0,0,w,39,'F');doc.setTextColor(70,39,96);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text('Lightworkers Brahamaputra Trust',w/2,13,{align:'center'});doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('4th Floor, Advika Tower, MG Road, Pan Bazar, Guwahati, Assam - 781001',w/2,20,{align:'center'});doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(title,w/2,31,{align:'center'});doc.setDrawColor(190,164,216);doc.line(16,42,w-16,42)}
+function footer(doc,page,total){const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();doc.setDrawColor(211,197,226);doc.line(16,h-17,w-16,h-17);doc.setTextColor(110,94,124);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('Lightworkers Brahamaputra Trust',16,h-11);doc.text(`Page ${page} of ${total}`,w-16,h-11,{align:'right'})}
+function drawSignatures(doc){
+ const h=doc.internal.pageSize.getHeight();
+ const y=h-29; const x1=25,x2=119,sw=52;
+ doc.setDrawColor(150,125,177);doc.setTextColor(83,65,101);doc.setFont('helvetica','normal');doc.setFontSize(8);
+ [x1,x2].forEach(x=>doc.line(x,y,x+sw,y));
+ doc.text('Prepared By',x1,y+5);doc.text('Authorised Signatory',x2,y+5);
+}
+function drawStudentLine(doc,item,x,y,maxWidth){
+ if(item.kind==='label'){
+  doc.setFont('helvetica','bold');doc.setTextColor(70,39,96);doc.setFontSize(9);doc.text(item.text,x,y);return 5.2;
+ }
+ doc.setFont('helvetica','normal');doc.setTextColor(48,38,58);doc.setFontSize(8);
+ const row=`${item.number}.  ${properCase(item.text)}`;
+ const split=doc.splitTextToSize(row,maxWidth);
+ doc.text(split,x+2,y);
+ return Math.max(4.2,split.length*4.0);
+}
+function makePDF(v){
+ if(!window.jspdf||!window.jspdf.jsPDF){alert('PDF library could not load. Please check your internet connection and try again.');return}
+ const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
+ const title=v.t==='royalty'?'PAYMENT VOUCHER (FOR ROYALTY)':v.t==='trainer'?'PAYMENT VOUCHER (FOR TRAINER FEES)':'INVOICE (FOR RECRUITER FEES)';
+ const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();
+ const totalStudents=v.fc.length+v.rc.length;
+ const namesStartOnNewPage=totalStudents>50;
+ drawHeader(doc,title);let y=52;
+ const topLine=v.t==='royalty'?'Paid to MCKS PRANIC HEALING TRUST ASSAM':v.t==='trainer'?`Trainer: ${properCase($('trainerName').value)}`:`Billed To: ${v.heldBy}`;
+ doc.setTextColor(70,39,96);doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.text(topLine,22,y);y+=9;
+ doc.setTextColor(48,38,58);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.text('Class:',22,y);doc.setFont('helvetica','normal');doc.text(v.className,60,y);y+=7;
+ doc.setFont('helvetica','bold');doc.text('Class Date:',22,y);doc.setFont('helvetica','normal');doc.text(`${formatDate(v.dates.a)}${v.dates.diff?` to ${formatDate(v.dates.b)}`:''}`,60,y);y+=7;
+ doc.setFont('helvetica','bold');doc.text(v.t==='recruiter'?'Class held by/at:':'Class held by/at:',22,y);doc.setFont('helvetica','normal');
+ const heldText=v.location?`${v.heldBy} at ${v.location}`:v.heldBy;const wrapped=doc.splitTextToSize(heldText||'—',125);doc.text(wrapped,60,y);y+=Math.max(7,wrapped.length*4.5)+4;
+ const rows=[];
+ if(v.t==='royalty')rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('royaltyRate').value),money(v.fc.length*Number($('royaltyRate').value))]);
+ if(v.t==='trainer'){rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('trainerFreshRate').value),money(v.fc.length*Number($('trainerFreshRate').value))]);if(v.rc.length)rows.push(['2','Total No. of Reviewers',String(v.rc.length),money($('trainerReviewRate').value),money(v.rc.length*Number($('trainerReviewRate').value))])}
+ if(v.t==='recruiter')rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('recruiterRate').value),money(v.fc.length*Number($('recruiterRate').value))]);
+ const total=v.t==='royalty'?v.fc.length*Number($('royaltyRate').value):v.t==='trainer'?v.fc.length*Number($('trainerFreshRate').value)+v.rc.length*Number($('trainerReviewRate').value):v.fc.length*Number($('recruiterRate').value);
+ doc.autoTable({startY:y,head:[[{content:'Student Details',colSpan:5,styles:{halign:'center',fillColor:[215,232,204],textColor:[45,53,39]} }],['S No.','Particulars','Nos.','Share per Student','Total']],body:rows,foot:[[{content:'Total',colSpan:4,styles:{halign:'right',fontStyle:'bold'}},money(total)]],theme:'grid',styles:{font:'helvetica',fontSize:8.5,cellPadding:2.5,textColor:[48,38,58],lineColor:[150,135,162],lineWidth:.25},headStyles:{fillColor:[230,218,242],textColor:[58,38,76],fontStyle:'bold',halign:'center'},footStyles:{fillColor:[245,239,250],textColor:[48,38,58]},columnStyles:{0:{cellWidth:14,halign:'center'},1:{cellWidth:61},2:{cellWidth:17,halign:'center'},3:{cellWidth:39,halign:'right'},4:{cellWidth:39,halign:'right'}}});
+ y=doc.lastAutoTable.finalY+8;
+ // Make one continuous, consistently styled sequence of name rows.
+ const items=[];
+ const addCategory=(label,names)=>{if(!names.length)return;items.push({kind:'label',text:label});names.forEach((name,i)=>items.push({kind:'name',number:i+1,text:name}))};
+ addCategory('List of Freshers:',v.fc);
+ if(v.t==='trainer'||v.rc.length)addCategory('List of Reviewers:',v.rc);
+ if(namesStartOnNewPage){
+  // More than 50 students: page one is a clean summary page without any student names.
+  doc.addPage();drawHeader(doc,title);
+ }
+ if(items.length){
+  const useTwoColumns=totalStudents>25;
+  const marginX=22, gap=9, colW=useTwoColumns?(w-2*marginX-gap)/2:w-2*marginX;
+  const startY=namesStartOnNewPage?51:Math.max(y,51);
+  const bottomLimit=h-38; // reserve signatures and footer on every page
+  const maxHeight=bottomLimit-startY;
+  // Measure each row with the same font and width used when drawing it, then paginate safely.
+  const measure=(item)=>{
+   if(item.kind==='label')return 5.2;
+   doc.setFont('helvetica','normal');doc.setFontSize(8);
+   return Math.max(4.2,doc.splitTextToSize(`${item.number}.  ${properCase(item.text)}`,colW-4).length*4.0);
+  };
+  let cursor=0;
+  while(cursor<items.length){
+   if(cursor>0){doc.addPage();drawHeader(doc,title)}
+   const colStarts=[cursor];
+   const colEnds=[];
+   const columns=useTwoColumns?2:1;
+   for(let c=0;c<columns;c++){
+    let used=0,idx=colStarts[c]??cursor;
+    while(idx<items.length){const ht=measure(items[idx]);if(used+ht>maxHeight&&idx>(colStarts[c]??cursor))break;if(used+ht>maxHeight)break;used+=ht;idx++}
+    colEnds[c]=idx;
+    if(c===0&&columns===2)colStarts[1]=idx;
+   }
+   // If no item fits due to an unusually long name, still place one item to guarantee progress.
+   if((colEnds[0]??cursor)===cursor){colEnds[0]=cursor+1;}
+   if(columns===2&&colStarts[1]!==undefined&&colEnds[1]===undefined){let used=0,idx=colStarts[1];while(idx<items.length){const ht=measure(items[idx]);if(used+ht>maxHeight&&idx>colStarts[1])break;if(used+ht>maxHeight)break;used+=ht;idx++}colEnds[1]=idx;}
+   for(let c=0;c<columns;c++){
+    let idx=colStarts[c]??cursor;const end=colEnds[c]??idx;let yy=startY;const xx=marginX+c*(colW+gap);
+    for(;idx<end;idx++)yy+=drawStudentLine(doc,items[idx],xx,yy,colW-4);
+   }
+   cursor=columns===2?(colEnds[1]??colEnds[0]):colEnds[0];
+   if(cursor<=colStarts[0])cursor=colStarts[0]+1;
+  }
+ }
+ // Signature lines are repeated on every page, including summary-only page one for >50 students.
+ const totalPages=doc.getNumberOfPages();
+ for(let p=1;p<=totalPages;p++){doc.setPage(p);drawSignatures(doc);footer(doc,p,totalPages)}
+ const prefix=v.t==='royalty'?'Royalty':v.t==='trainer'?'Trainer_Fees':'Recruiter_Fees';
+ const name=`${prefix}_${cleanFilePart(v.className)}_${filenameDate(v.dates.a)}.pdf`;doc.save(name)
+}
+$('classSelect').addEventListener('change',()=>{$('otherClassWrap').classList.toggle('hidden',$('classSelect').value!=='__OTHER__');updateRates()});$('centreNameSelect').addEventListener('change',()=>{$('centreNameOther').classList.toggle('hidden',$('centreNameSelect').value!=='__OTHER__')});document.querySelectorAll('input[name="docType"]').forEach(el=>el.addEventListener('change',()=>{toggleType();if(selectedType()==='recruiter'){$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');}}));['freshers','reviewers'].forEach(id=>$(id).addEventListener('input',recalc));['royaltyRate','trainerFreshRate','trainerReviewRate','recruiterRate'].forEach(id=>$(id).addEventListener('input',e=>{if(e.target.value.includes('.')){e.target.setCustomValidity('Whole numbers only; decimals are not allowed.');}else{e.target.setCustomValidity('');}recalc()}));['fromDate','toDate'].forEach(id=>$(id).addEventListener('input',e=>{window.longClassApproved=false;let v=e.target.value.replace(/\D/g,'').slice(0,6);if(v.length>4)v=v.slice(0,2)+'-'+v.slice(2,4)+'-'+v.slice(4);else if(v.length>2)v=v.slice(0,2)+'-'+v.slice(2);e.target.value=v;}));$('generateBtn').addEventListener('click',()=>{const v=validate();if(v)makePDF(v)});$('voucherForm').addEventListener('reset',()=>setTimeout(()=>{window.longClassApproved=false;$('otherClassWrap').classList.add('hidden');$('otherClass').value='';$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');$('heldAt').value='';$('trainerName').value='';$('dateWarning').classList.add('hidden');toggleType();updateRates()},0));
+['otherClass','centreNameOther','trainerName','heldAt'].forEach(id=>$(id).addEventListener('blur',()=>{$(id).value=properCase($(id).value)}));
+populateClasses();updateRates();toggleType();
+</script>
+</body></html>
