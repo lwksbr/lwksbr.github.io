@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.ico?v=2" type="image/x-icon">
+
 <title>Healing Log to PDF Generator | Lightworkers Brahamaputra</title>
 <style>
 :root{--purple:#8062a8;--purple-dark:#5f467f;--lavender:#eee7f6;--lavender2:#f8f5fb;--border:#d9cce8;--ink:#2d2636;--muted:#6d6576;--white:#fff}
@@ -358,7 +360,7 @@ async function makePDF(){
  const total=doc.getNumberOfPages();
  for(let p=1;p<=total;p++){
   doc.setPage(p);
-  if(p!==total){const yy=pageH-24;doc.setDrawColor(...purple);doc.setLineWidth(.3);doc.line(margin,yy,margin+58,yy);doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(...ink);doc.text('HEALER SIGNATURE',margin,yy+5)}
+  if(p!==total){const yy=pageH-24;doc.setDrawColor(...purple);doc.setLineWidth(.3);doc.line(margin,yy,margin+58,yy);doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(...ink);doc.text(`HEALER (${healer.toUpperCase()})`,margin,yy+5)}
   doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.setTextColor(100,91,110);doc.text(`Page ${p} of ${total}`,pageW/2,pageH-9,{align:'center'});
  }
  const filename=`${safeFile(healer)}_${month}_${year}_Summary.pdf`;
