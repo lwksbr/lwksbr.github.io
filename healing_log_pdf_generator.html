@@ -28,11 +28,19 @@ button{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:point
 <section class="card">
   <h2>1. Report details</h2>
   <div class="grid">
-    <div class="field"><label for="healer">Healer name</label><input id="healer" minlength="3" maxlength="30" required placeholder="Enter healer's full name (3–30 characters)" aria-describedby="healerStatus"><div id="healerStatus" class="status" aria-live="polite">Enter 3–30 characters.</div></div>
+    <div class="field"><label for="healerChoice">Healer name</label>
+      <select id="healerChoice" required>
+        <option value="">Select healer</option><option>Namita Kothari</option><option>Mamta Harlalka</option><option>Smarita Sen</option><option>Pinky Jain</option><option>Fatima Dhar Saikia</option><option>Ashalata Besi</option><option value="Other">Other</option>
+      </select>
+      <input id="healer" class="hidden" minlength="3" maxlength="30" placeholder="Enter healer's full name (3–30 characters)" aria-describedby="healerStatus">
+      <div id="healerStatus" class="status" aria-live="polite">Select a healer from the list.</div>
+      <div id="healerSheetLink" class="small"></div>
+    </div>
     <div class="field"><label for="month">Month</label><select id="month"></select></div>
     <div class="field"><label for="year">Year</label><select id="year"><option>2026</option><option>2027</option><option>2028</option></select></div>
     <div class="field"><label for="currency">Amounts</label><select id="currency"><option value="₹">Indian Rupees (₹)</option><option value="">Numbers only</option></select></div>
   </div>
+  <div class="actions"><button type="button" class="secondary" id="clearTopBtn">Clear Data / Refresh</button></div>
 </section>
 
 <section class="card">
@@ -125,9 +133,25 @@ function cleanNumeric(v){
 function setStatus(id,msg){$(id).textContent=msg}
 function normalizeName(value){return String(value??'').trim().slice(0,30)}
 function validName(value){const n=String(value??'').trim();return n.length>=3&&n.length<=30}
+const healerSheets={
+ 'Namita Kothari':'https://docs.google.com/spreadsheets/d/1QL9rqDNKH7e2IMFoJc2mLmT29ebqWnhYV_iKoKXTp90/edit?usp=sharing',
+ 'Mamta Harlalka':'https://docs.google.com/spreadsheets/d/1Ujd9lAAU0xNCjn-taCzB7Qcv9W_Y2cWHhP_ALr2gJDg/edit?usp=sharing',
+ 'Smarita Sen':'https://docs.google.com/spreadsheets/d/1YWhyQXZVPgb5o7yXxfAJoeZRjQ1Np2OQL9_X-Qtn1w0/edit?usp=sharing',
+ 'Pinky Jain':'https://docs.google.com/spreadsheets/d/1ojlJpQSHKu122OPYQ10p5syxZ2hfXzhZWZkOFRLoezQ/edit?usp=sharing'
+};
+function updateHealerChoice(){
+ const choice=$('healerChoice').value, custom=$('healer');
+ custom.classList.toggle('hidden',choice!=='Other');
+ if(choice && choice!=='Other') custom.value=choice;
+ else if(choice!=='Other') custom.value='';
+ const link=healerSheets[choice];
+ $('healerSheetLink').innerHTML=link?`<a href="${link}" target="_blank" rel="noopener">Open Healing Spreadsheet</a>`:'';
+ if(choice==='Other'){$('healerStatus').textContent='Enter 3–30 characters.';custom.focus();}
+ else {$('healerStatus').textContent=choice?'Selected: '+choice:'Select a healer from the list.';$('healerStatus').style.color='';}
+}
+$('healerChoice').addEventListener('change',updateHealerChoice);
 $('healer').addEventListener('input',()=>{
-  const el=$('healer');
-  if(el.value.length>30)el.value=el.value.slice(0,30);
+  const el=$('healer'); if(el.value.length>30)el.value=el.value.slice(0,30);
   const value=el.value.trim();
   if(value.length>0&&value.length<3){$('healerStatus').textContent='Error: Healer name must contain at least 3 characters.';$('healerStatus').style.color='#b42318';}
   else {$('healerStatus').textContent=`${value.length}/30 characters${value.length<3?' (minimum 3)':''}`;$('healerStatus').style.color=value.length<3?'#b42318':'';}
@@ -221,7 +245,9 @@ function addBlankRow(){
 }
 $('addRowBtn').addEventListener('click',addBlankRow);
 $('addRowBtnBottom').addEventListener('click',addBlankRow);
-$('clearBtn').addEventListener('click',()=>{rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('addRowBtnBottom').classList.add('hidden');$('goDownBtn').classList.add('hidden');$('summarySection').classList.add('hidden');$('paste').value='';$('file').value='';setStatus('logStatus','');setStatus('importStatus','All rows cleared.')});
+function clearAllData(){rows=[];preparedRows=[];summaryRows=[];renderLog();$('processBtn').classList.add('hidden');$('processBtnTop').classList.add('hidden');$('addRowBtnBottom').classList.add('hidden');$('goDownBtn').classList.add('hidden');$('summarySection').classList.add('hidden');$('paste').value='';$('file').value='';$('healerChoice').value='';$('healer').value='';$('healer').classList.add('hidden');$('healerSheetLink').innerHTML='';$('healerStatus').textContent='Select a healer from the list.';$('healerStatus').style.color='';setStatus('logStatus','');setStatus('importStatus','All data cleared. Ready for a fresh report.');}
+$('clearBtn').addEventListener('click',clearAllData);
+$('clearTopBtn').addEventListener('click',clearAllData);
 function processData(){
  // Remove blank patient rows from both the data model and the visible log before validating.
  rows=rows.filter(r=>String(r.name??'').trim()!=='');
