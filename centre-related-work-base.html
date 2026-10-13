@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.ico?v=2" type="image/x-icon">
+
+  <meta name="theme-color" content="#321239">
+  <title>Centre Related Work Base | Lightworkers Brahamaputra</title>
+  <style>
+    :root {
+	  --bg: #321239;
+      --plum: #321239;
+      --cyan: #009acb;
+      --green: #98cb65;
+      --lavender: #f4eafa;
+      --ink: #302536;
+      --muted: #6e6172;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+    .page { width: min(960px, calc(100% - 32px)); margin: 0 auto; flex: 1; }
+    header { padding: 30px 0 18px; text-align: center; }
+    .logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      min-height: 90px;
+      margin: 0 auto 18px;
+    }
+    .logos img { max-width: 145px; max-height: 86px; width: auto; height: auto; object-fit: contain; }
+    .logos img.ph { max-width: 94px; max-height: 86px; }
+    h1 { color: var(--plum); font-size: clamp(1.7rem, 4vw, 2.5rem); margin: 8px 0; line-height: 1.15; }
+    .subtitle { color: var(--white); margin: 0 auto; max-width: 650px; line-height: 1.6; }
+    main { padding: 22px 0 42px; }
+    .section-title { color: var(--plum); text-align: center; font-size: 1.15rem; margin: 0 0 20px; }
+    .links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .tool-card {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+      padding: 25px; background: rgba(255,255,255,.94); border: 1px solid #e3d6e9;
+      border-radius: 18px; box-shadow: 0 8px 24px rgba(50,18,57,.08);
+      text-decoration: none; color: inherit; min-height: 200px;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .tool-card:hover, .tool-card:focus-visible { transform: translateY(-3px); border-color: var(--cyan); box-shadow: 0 12px 28px rgba(50,18,57,.14); outline: none; }
+    .icon {
+      display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+      color: var(--plum); background: var(--lavender);
+    }
+    .icon svg { width: 26px; height: 26px; }
+    .tool-card h2 { color: var(--plum); margin: 0; font-size: 1.2rem; }
+    .tool-card p { color: var(--muted); margin: 0; line-height: 1.55; flex: 1; }
+    .open-link { color: #007da7; font-weight: 700; margin-top: 2px; }
+    .note { margin: 24px 0 0; text-align: center; color: var(--muted); font-size: .92rem; }
+    footer { padding: 22px 16px 26px; text-align: center; background: rgba(255,255,255,.68); border-top: 1px solid #e6d9eb; }
+    .blessing { color: var(--plum); font-weight: 700; max-width: 800px; margin: 0 auto; line-height: 1.65; }
+    .footer-name { color: var(--muted); font-size: .83rem; margin: 10px 0 0; }
+    @media (max-width: 640px) {
+      header { padding-top: 22px; }
+      .logos { gap: 12px; }
+      .logos img { max-width: 125px; max-height: 72px; }
+      .logos img.ph { max-width: 78px; max-height: 72px; }
+      .links { grid-template-columns: 1fr; }
+      .tool-card { min-height: 175px; padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logos" aria-label="Centre and Pranic Healing logos">
+        <!-- Keep these logo files in the images folder; filenames can be changed here later. -->
+        <img src="images/lwks-logo.png" alt="Lightworkers Brahamaputra logo"
+             onerror="this.style.display='none'">
+        <img class="ph" src="images/ph-logo.png" alt="Pranic Healing logo"
+             onerror="this.style.display='none'">
+      </div>
+      <h1 style="color: white;">Centre Related Work Base</h1>
+      <p class="subtitle">A central place to access the centre’s regular calculation and reporting tools.</p>
+    </header>
+
+    <main>
+      <h2 class="section-title" style="color: white;">Choose a tool</h2>
+      <div class="links">
+        <a class="tool-card" href="after_class_calc.html">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2M8 18h2m4 0h2"></path>
+            </svg>
+          </span>
+          <h2>After Class Calculator</h2>
+          <p>Prepare royalty, trainer-fee and recruiter-fee vouchers after a class, with student counts and PDF generation.</p>
+          <span class="open-link">Open calculator →</span>
+        </a>
+
+        <a class="tool-card" href="healing_log_pdf_generator.html">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 3h7l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path><path d="M14 3v5h5M8 12h7M8 16h7"></path>
+            </svg>
+          </span>
+          <h2>Healing Log PDF Generator</h2>
+          <p>Open the healing-log tool to prepare and generate healing log reports as PDF files.</p>
+          <span class="open-link">Open healing log tool →</span>
+        </a>
+      </div>
+      <!-- <p class="note">More centre tools can be added later by adding another link card in this page.</p> -->
+    </main>
+  </div>
+
+  <footer>
+    <p class="blessing">May your work be done with care and excellence, and may you be blessed with the strength, wisdom and intelligence to overcome every obstacle.</p>
+    <p class="footer-name" style="color: muted;">Lightworkers Brahamaputra</p>
+  </footer>
+</body>
+</html>
