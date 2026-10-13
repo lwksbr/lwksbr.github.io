@@ -133,7 +133,16 @@ function cleanNumeric(v){
  return Number(String(v??'').replace(/^[¹²³⁴⁵⁶⁷⁸⁹⁰]+/,'').replace(/[₹,$,\s]/g,'').replace(/,/g,'').trim())||0;
 }
 function setStatus(id,msg){$(id).textContent=msg}
-function normalizeName(value){return String(value??'').trim().slice(0,30)}
+function normalizeName(value){
+  return String(value ?? '')
+    .replace(/[^a-zA-Z\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/\b[a-z]/g, letter => letter.toUpperCase())
+    .slice(0, 30);
+}
+
 function validName(value){const n=String(value??'').trim();return n.length>=3&&n.length<=30}
 const healerSheets={
  'Namita Kothari':'https://docs.google.com/spreadsheets/d/1QL9rqDNKH7e2IMFoJc2mLmT29ebqWnhYV_iKoKXTp90/edit?usp=sharing',
