@@ -17,6 +17,7 @@
 <section class="card"><h2>1. Select document type</h2><div class="radio-grid">
 <label class="radio-card"><input type="radio" name="docType" value="royalty" checked><span><strong>Royalty to Assam Trust</strong><small>Payment Voucher (for Royalty)</small></span></label>
 <label class="radio-card"><input type="radio" name="docType" value="trainer"><span><strong>Trainer Fees Share</strong><small>Payment Voucher (for Trainer Fees)</small></span></label>
+<label class="radio-card"><input type="radio" name="docType" value="recruiterVoucher"><span><strong>Recruiter Centre Fees Payment Voucher</strong><small>Payment Voucher (for Recruiter Fees) — only for Basic/Soul Class done at another centre</small></span></label>
 <label class="radio-card"><input type="radio" name="docType" value="recruiter"><span><strong>Recruiter Centre Fees</strong><small>Invoice (for Recruiter Fees)</small></span></label>
 </div></section>
 <section class="card"><h2>2. Class and student details</h2><div class="grid">
@@ -26,9 +27,10 @@
 <div class="field"><label for="toDate">To date <span class="help">(optional)</span></label><input id="toDate" placeholder="DD-MM-YY (optional)" maxlength="8" inputmode="numeric"><span class="help">Leave blank for a single-day class. If entered, maximum normal date difference is 1 day.</span></div>
 <div class="field full"><div id="dateWarning" class="warning hidden"></div></div>
 <div class="field full"><label for="freshers">Fresher student names <span class="required">*</span></label><textarea id="freshers" placeholder="Enter one student name per line" required></textarea><div class="counts"><span class="count">Freshers: <strong id="fresherCount">0</strong></span></div><span class="help">Each non-empty line counts as one fresher. Blank lines are ignored.</span></div>
-<div class="field full"><label for="reviewers">Reviewer student names</label><textarea id="reviewers" placeholder="Enter one reviewer name per line (if any)"></textarea><div class="counts"><span class="count">Reviewers: <strong id="reviewerCount">0</strong></span></div><span class="help">Each non-empty line counts as one reviewer. Blank lines are ignored.</span></div>
-<div class="field" id="heldByWrap"><label>Class held by</label><input value="Lightworkers Brahamaputra Trust" readonly aria-readonly="true"></div>
+<div class="field full hidden" id="reviewersWrap"><label for="reviewers">Reviewer student names</label><textarea id="reviewers" placeholder="Enter one reviewer name per line (if any)"></textarea><div class="counts"><span class="count">Reviewers: <strong id="reviewerCount">0</strong></span></div><span class="help">Each non-empty line counts as one reviewer. Blank lines are ignored.</span></div>
+<div class="field" id="heldByWrap"><label>Class held by</label><input value="LIGHTWORKERS BRAHAMAPUTRA TRUST" readonly aria-readonly="true"></div>
 <div class="field hidden" id="centreNameWrap"><label for="centreNameSelect">Centre name <span class="required">*</span></label><select id="centreNameSelect"><option value="MCKS Pranic Healing Trust of Assam">MCKS Pranic Healing Trust of Assam</option><option value="__OTHER__">Other</option></select><input id="centreNameOther" class="hidden" placeholder="Enter centre name" autocomplete="off" style="margin-top:8px"></div>
+<div class="field hidden" id="attendedCentreWrap"><label for="attendedCentre">Centre name where students attended the Basic/Soul Class <span class="required">*</span></label><input id="attendedCentre" placeholder="Enter the centre name" autocomplete="organization"></div>
 <div class="field"><label for="heldAt">Class held at</label><input id="heldAt" placeholder="Optional venue / location"></div>
 </div></section>
 <section class="card"><h2>3. Payment details</h2>
@@ -70,62 +72,123 @@ function populateClasses(){const s=$('classSelect');s.innerHTML='<option value="
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setRate(id,value){$(id).value=value===undefined||!Number.isFinite(Number(value))?'':String(value)}
 function updateRates(){const name=$('classSelect').value;const f=fees.find(x=>x.name===name);if(name==='__OTHER__'||!f){['royaltyRate','trainerFreshRate','trainerReviewRate','recruiterRate'].forEach(id=>setRate(id,''));}else{setRate('royaltyRate',f.royalty);setRate('trainerFreshRate',f.trainerFresh);setRate('trainerReviewRate',f.trainerReview);setRate('recruiterRate',f.recruiter)}recalc()}
-function toggleType(){const t=selectedType();$('royaltyRateWrap').classList.toggle('hidden',t!=='royalty');$('trainerFreshRateWrap').classList.toggle('hidden',t!=='trainer');$('trainerReviewRateWrap').classList.toggle('hidden',t!=='trainer');$('recruiterRateWrap').classList.toggle('hidden',t!=='recruiter');$('trainerNameWrap').classList.toggle('hidden',t!=='trainer');$('heldByWrap').classList.toggle('hidden',t==='recruiter');$('centreNameWrap').classList.toggle('hidden',t!=='recruiter');$('reviewerSummaryLine').classList.toggle('hidden',t==='recruiter');$('totalLabel').textContent=t==='royalty'?'Total royalty payment':t==='trainer'?'Total trainer fees payment':'Total recruiter fees payment';recalc()}
-function recalc(){const fc=lines('freshers').length,rc=lines('reviewers').length; $('fresherCount').textContent=fc;$('reviewerCount').textContent=rc;$('summaryFreshers').textContent=fc;$('summaryReviewers').textContent=rc;const t=selectedType();let total=0;if(t==='royalty')total=fc*(Number($('royaltyRate').value)||0);if(t==='trainer')total=fc*(Number($('trainerFreshRate').value)||0)+rc*(Number($('trainerReviewRate').value)||0);if(t==='recruiter')total=fc*(Number($('recruiterRate').value)||0);$('totalAmount').textContent=money(total);$('calculationNote').textContent=t==='royalty'?`${fc} fresher(s) × ${money($('royaltyRate').value)} per fresher`:t==='trainer'?`${fc} fresher(s) × ${money($('trainerFreshRate').value)} + ${rc} reviewer(s) × ${money($('trainerReviewRate').value)}`:`${fc} fresher(s) × ${money($('recruiterRate').value)}. Recruiter fees apply to freshers only.`}
+function isRecruiterType(t){return t==='recruiter'||t==='recruiterVoucher'}
+function toggleType(){const t=selectedType(), recruiter=isRecruiterType(t);$('royaltyRateWrap').classList.toggle('hidden',t!=='royalty');$('trainerFreshRateWrap').classList.toggle('hidden',t!=='trainer');$('trainerReviewRateWrap').classList.toggle('hidden',t!=='trainer');$('recruiterRateWrap').classList.toggle('hidden',!recruiter);$('trainerNameWrap').classList.toggle('hidden',t!=='trainer');$('heldByWrap').classList.toggle('hidden',t==='recruiter');$('centreNameWrap').classList.toggle('hidden',t!=='recruiter');$('attendedCentreWrap').classList.toggle('hidden',t!=='recruiterVoucher');$('reviewersWrap').classList.toggle('hidden',t!=='trainer');$('reviewerSummaryLine').classList.toggle('hidden',t!=='trainer');$('totalLabel').textContent=t==='royalty'?'Total royalty payment':t==='trainer'?'Total trainer fees payment':t==='recruiterVoucher'?'Total recruiter fees payment voucher':'Total recruiter fees payment';recalc()}
+function recalc(){const t=selectedType(),fc=lines('freshers').length,rc=t==='trainer'?lines('reviewers').length:0;$('fresherCount').textContent=fc;$('reviewerCount').textContent=rc;$('summaryFreshers').textContent=fc;$('summaryReviewers').textContent=rc;let total=0;if(t==='royalty')total=fc*(Number($('royaltyRate').value)||0);if(t==='trainer')total=fc*(Number($('trainerFreshRate').value)||0)+rc*(Number($('trainerReviewRate').value)||0);if(isRecruiterType(t))total=fc*(Number($('recruiterRate').value)||0);$('totalAmount').textContent=money(total);$('calculationNote').textContent=t==='royalty'?`${fc} fresher(s) × ${money($('royaltyRate').value)} per fresher`:t==='trainer'?`${fc} fresher(s) × ${money($('trainerFreshRate').value)} + ${rc} reviewer(s) × ${money($('trainerReviewRate').value)}`:`${fc} fresher(s) × ${money($('recruiterRate').value)}. Recruiter fees apply to freshers only.`}
+
 function dateParse(s){if(!/^\d{2}-\d{2}-\d{2}$/.test(s))return null;const [d,m,y]=s.split('-').map(Number);const full=2000+y;const dt=new Date(Date.UTC(full,m-1,d));if(dt.getUTCFullYear()!==full||dt.getUTCMonth()!==m-1||dt.getUTCDate()!==d)return null;return dt}
 function diffDays(a,b){return Math.round((b-a)/86400000)}
 function dateRange(){const a=dateParse($('fromDate').value);const toValue=$('toDate').value.trim();if(!a)return {ok:false,msg:'Enter a valid From Date in DD-MM-YY format.'};const b=toValue?dateParse(toValue):a;if(!b)return {ok:false,msg:'Enter a valid To Date in DD-MM-YY format, or leave it blank.'};if(b<a)return {ok:false,msg:'To Date cannot be earlier than From Date.'};const diff=diffDays(a,b);if(diff>1&&!window.longClassApproved){$('dateWarning').textContent=`The dates are ${diff+1} calendar days inclusive (${diff} days apart). Please confirm whether the class lasted more than 2 days.`;$('dateWarning').classList.remove('hidden');const yes=confirm('The From and To dates are more than 1 day apart. Was the class more than 2 days?\n\nChoose Yes to confirm and continue, or No to return and correct the dates.');if(!yes)return {ok:false,msg:'Please correct the dates, or confirm the duration if the class was more than 2 days.'};window.longClassApproved=true;$('dateWarning').textContent='Long class duration confirmed by user.';}else if(diff<=1){window.longClassApproved=false;$('dateWarning').classList.add('hidden')}return {ok:true,a,b,diff}}
 function formatDate(dt){return String(dt.getUTCDate()).padStart(2,'0')+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dt.getUTCMonth()]+'-'+String(dt.getUTCFullYear()).slice(-2)}
 function filenameDate(dt){return String(dt.getUTCDate()).padStart(2,'0')+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dt.getUTCMonth()]+'-'+String(dt.getUTCFullYear()).slice(-2)}
 function cleanFilePart(s){return String(s).trim().replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,'_').replace(/_+/g,'_')}
-function getHeldBy(){if(selectedType()==='recruiter')return $('centreNameSelect').value==='__OTHER__'?properCase($('centreNameOther').value):'MCKS Pranic Healing Trust of Assam';return 'Lightworkers Brahamaputra Trust'}
+let pdfFont='helvetica';
+function getHeldBy(){const t=selectedType();if(t==='recruiterVoucher')return 'LIGHTWORKERS BRAHAMAPUTRA TRUST';if(t==='recruiter')return $('centreNameSelect').value==='__OTHER__'?properCase($('centreNameOther').value):'MCKS Pranic Healing Trust of Assam';return 'Lightworkers Brahamaputra Trust'}
 function getLocation(){const s=$('heldAt').value.trim();return s?properCase(s):''}
-function validate(){const t=selectedType();if(!$('classSelect').value){alert('Please select a class.');$('classSelect').focus();return null}if($('classSelect').value==='__OTHER__'&&!properCase($('otherClass').value)){alert('Please enter the other class name.');$('otherClass').focus();return null}const dates=dateRange();if(!dates.ok){alert(dates.msg);return null}if(!lines('freshers').length){alert('Enter at least one fresher student name.');$('freshers').focus();return null}if(t==='recruiter'&&$('centreNameSelect').value==='__OTHER__'&&!properCase($('centreNameOther').value)){alert('Please enter the Centre Name.');$('centreNameOther').focus();return null}if(t==='trainer'&&!properCase($('trainerName').value)){alert('Please enter the Trainer Name.');$('trainerName').focus();return null}const requiredRates=t==='royalty'?['royaltyRate']:t==='trainer'?['trainerFreshRate','trainerReviewRate']:['recruiterRate'];for(const id of requiredRates){if($(id).value===''||!Number.isFinite(Number($(id).value))||Number($(id).value)<0||!Number.isInteger(Number($(id).value))){alert('Enter a valid whole-number amount (no decimals) for each required fee field.');$(id).focus();return null}}return {t,dates,fc:lines('freshers'),rc:lines('reviewers'),className:currentClass(),heldBy:getHeldBy(),location:getLocation()}}
-function drawHeader(doc,title){const w=doc.internal.pageSize.getWidth();doc.setFillColor(241,233,249);doc.rect(0,0,w,39,'F');doc.setTextColor(70,39,96);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text('Lightworkers Brahamaputra Trust',w/2,13,{align:'center'});doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text('4th Floor, Advika Tower, MG Road, Pan Bazar, Guwahati, Assam - 781001',w/2,20,{align:'center'});doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(title,w/2,31,{align:'center'});doc.setDrawColor(190,164,216);doc.line(16,42,w-16,42)}
-function footer(doc,page,total){const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();doc.setDrawColor(211,197,226);doc.line(16,h-17,w-16,h-17);doc.setTextColor(110,94,124);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('Lightworkers Brahamaputra Trust',16,h-11);doc.text(`Page ${page} of ${total}`,w-16,h-11,{align:'right'})}
+function validate(){const t=selectedType();if(!$('classSelect').value){alert('Please select a class.');$('classSelect').focus();return null}if($('classSelect').value==='__OTHER__'&&!properCase($('otherClass').value)){alert('Please enter the other class name.');$('otherClass').focus();return null}const dates=dateRange();if(!dates.ok){alert(dates.msg);return null}if(!lines('freshers').length){alert('Enter at least one fresher student name.');$('freshers').focus();return null}if(t==='recruiter'&&$('centreNameSelect').value==='__OTHER__'&&!properCase($('centreNameOther').value)){alert('Please enter the Centre Name.');$('centreNameOther').focus();return null}if(t==='recruiterVoucher'&&!properCase($('attendedCentre').value)){alert('Please enter the centre name where students attended the Basic/Soul Class.');$('attendedCentre').focus();return null}if(t==='trainer'&&!properCase($('trainerName').value)){alert('Please enter the Trainer Name.');$('trainerName').focus();return null}const requiredRates=t==='royalty'?['royaltyRate']:t==='trainer'?['trainerFreshRate','trainerReviewRate']:['recruiterRate'];for(const id of requiredRates){if($(id).value===''||!Number.isFinite(Number($(id).value))||Number($(id).value)<0||!Number.isInteger(Number($(id).value))){alert('Enter a valid whole-number amount (no decimals) for each required fee field.');$(id).focus();return null}}return {t,dates,fc:lines('freshers'),rc:t==='trainer'?lines('reviewers'):[],className:currentClass(),heldBy:getHeldBy(),location:getLocation()}}
+
+function drawHeader(doc,title){
+  const w=doc.internal.pageSize.getWidth();
+
+  doc.setTextColor(126,98,164);
+  doc.setFont(pdfFont,'bold');
+  doc.setFontSize(15);
+  doc.text('LIGHTWORKERS BRAHAMAPUTRA TRUST',w/2,16,{align:'center'});
+
+  doc.setTextColor(48,40,57);
+  doc.setFont(pdfFont,'normal');
+  doc.setFontSize(8);
+  doc.text(
+    '402, 4th Floor, Advika Tower, MG Road, Pan Bazar, Guwahati, Assam - 781001',
+    w/2,20,{align:'center'}
+  );
+
+  doc.setFont(pdfFont,'bold');
+  doc.setFontSize(11);
+  const titleLines=doc.splitTextToSize(title,w-32);
+  doc.text(titleLines,w/2,29,{align:'center'});
+
+  doc.setDrawColor(215,202,230);
+  doc.setLineWidth(.3);
+  doc.line(16,35,w-16,35);
+}
+
+function footer(doc,page,total){const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();doc.setDrawColor(215,202,230);doc.line(16,h-17,w-16,h-17);doc.setTextColor(100,91,110);doc.setFont(pdfFont,'normal');doc.setFontSize(8);doc.text(`Page ${page} of ${total}`,w/2,h-11,{align:'center'})}
 function drawSignatures(doc){
  const h=doc.internal.pageSize.getHeight();
  const y=h-29; const x1=25,x2=119,sw=52;
- doc.setDrawColor(150,125,177);doc.setTextColor(83,65,101);doc.setFont('helvetica','normal');doc.setFontSize(8);
+ doc.setDrawColor(126,98,164);doc.setTextColor(83,65,101);doc.setFont(pdfFont,'normal');doc.setFontSize(8);
  [x1,x2].forEach(x=>doc.line(x,y,x+sw,y));
  doc.text('Prepared By',x1,y+5);doc.text('Authorised Signatory',x2,y+5);
 }
 function drawStudentLine(doc,item,x,y,maxWidth){
  if(item.kind==='label'){
-  doc.setFont('helvetica','bold');doc.setTextColor(70,39,96);doc.setFontSize(9);doc.text(item.text,x,y);return 5.2;
+  doc.setFont(pdfFont,'bold');doc.setTextColor(126,98,164);doc.setFontSize(9);doc.text(item.text,x,y);return 5.2;
  }
- doc.setFont('helvetica','normal');doc.setTextColor(48,38,58);doc.setFontSize(8);
+ doc.setFont(pdfFont,'normal');doc.setTextColor(48,40,57);doc.setFontSize(8);
  const row=`${item.number}.  ${properCase(item.text)}`;
  const split=doc.splitTextToSize(row,maxWidth);
  doc.text(split,x+2,y);
  return Math.max(4.2,split.length*4.0);
 }
-function makePDF(v){
- if(!window.jspdf||!window.jspdf.jsPDF){alert('PDF library could not load. Please check your internet connection and try again.');return}
- const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'mm',format:'a4'});
- const title=v.t==='royalty'?'PAYMENT VOUCHER (FOR ROYALTY)':v.t==='trainer'?'PAYMENT VOUCHER (FOR TRAINER FEES)':'INVOICE (FOR RECRUITER FEES)';
+async function makePDF(v){
+  if(!window.jspdf||!window.jspdf.jsPDF){
+    alert('PDF library could not load. Please check your internet connection and try again.');
+    return;
+  }
+
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+
+  let unicodeFontReady=false;
+  try {
+    const fontUrl='https://raw.githubusercontent.com/google/fonts/main/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf';
+    const response=await fetch(fontUrl);
+    if(!response.ok) throw new Error('Font download failed');
+
+    const buffer=await response.arrayBuffer();
+    let binary='';
+    const bytes=new Uint8Array(buffer);
+
+    for(let i=0;i<bytes.length;i+=0x8000){
+      binary+=String.fromCharCode(
+        ...bytes.subarray(i,Math.min(i+0x8000,bytes.length))
+      );
+    }
+
+    doc.addFileToVFS('NotoSans.ttf',btoa(binary));
+    doc.addFont('NotoSans.ttf','NotoSans','normal');
+    doc.addFont('NotoSans.ttf','NotoSans','bold');
+    unicodeFontReady=true;
+  } catch(e) {
+    console.warn('Could not load Unicode font; PDF will use fallback font.',e);
+  }
+
+  pdfFont=unicodeFontReady?'NotoSans':'helvetica';
+
+ const title=v.t==='royalty'?'PAYMENT VOUCHER (FOR ROYALTY)':v.t==='trainer'?'PAYMENT VOUCHER (FOR TRAINER FEES)':v.t==='recruiterVoucher'?'PAYMENT VOUCHER (FOR RECRUITER FEES)':'INVOICE (FOR RECRUITER FEES)';
  const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();
  const totalStudents=v.fc.length+v.rc.length;
  const namesStartOnNewPage=totalStudents>50;
  drawHeader(doc,title);let y=52;
- const topLine=v.t==='royalty'?'Paid to MCKS PRANIC HEALING TRUST ASSAM':v.t==='trainer'?`Trainer: ${properCase($('trainerName').value)}`:`Billed To: ${v.heldBy}`;
- doc.setTextColor(70,39,96);doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.text(topLine,22,y);y+=9;
- doc.setTextColor(48,38,58);doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.text('Class:',22,y);doc.setFont('helvetica','normal');doc.text(v.className,60,y);y+=7;
- doc.setFont('helvetica','bold');doc.text('Class Date:',22,y);doc.setFont('helvetica','normal');doc.text(`${formatDate(v.dates.a)}${v.dates.diff?` to ${formatDate(v.dates.b)}`:''}`,60,y);y+=7;
- doc.setFont('helvetica','bold');doc.text(v.t==='recruiter'?'Class held by/at:':'Class held by/at:',22,y);doc.setFont('helvetica','normal');
+ const topLine=v.t==='royalty'?'Paid to MCKS PRANIC HEALING TRUST ASSAM':v.t==='trainer'?`Trainer: ${properCase($('trainerName').value)}`:v.t==='recruiterVoucher'?`Paid to: ${$('attendedCentre').value.trim().toUpperCase()}`:`Billed To: ${v.heldBy}`;
+ doc.setTextColor(126,98,164);doc.setFont(pdfFont,'bold');doc.setFontSize(10.5);doc.text(topLine,22,y);y+=9;
+ doc.setTextColor(48,40,57);doc.setFontSize(9.5);doc.setFont(pdfFont,'bold');doc.text('Class:',22,y);doc.setFont(pdfFont,'normal');doc.text(v.className,60,y);y+=7;
+ doc.setFont(pdfFont,'bold');doc.text('Class Date:',22,y);doc.setFont(pdfFont,'normal');doc.text(`${formatDate(v.dates.a)}${v.dates.diff?` to ${formatDate(v.dates.b)}`:''}`,60,y);y+=7;
+ doc.setFont(pdfFont,'bold');doc.text(v.t==='recruiter'?'Class held by/at:':'Class held by/at:',22,y);doc.setFont(pdfFont,'normal');
  const heldText=v.location?`${v.heldBy} at ${v.location}`:v.heldBy;const wrapped=doc.splitTextToSize(heldText||'—',125);doc.text(wrapped,60,y);y+=Math.max(7,wrapped.length*4.5)+4;
  const rows=[];
  if(v.t==='royalty')rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('royaltyRate').value),money(v.fc.length*Number($('royaltyRate').value))]);
  if(v.t==='trainer'){rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('trainerFreshRate').value),money(v.fc.length*Number($('trainerFreshRate').value))]);if(v.rc.length)rows.push(['2','Total No. of Reviewers',String(v.rc.length),money($('trainerReviewRate').value),money(v.rc.length*Number($('trainerReviewRate').value))])}
- if(v.t==='recruiter')rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('recruiterRate').value),money(v.fc.length*Number($('recruiterRate').value))]);
+ if(isRecruiterType(v.t))rows.push(['1','Total No. of Freshers',String(v.fc.length),money($('recruiterRate').value),money(v.fc.length*Number($('recruiterRate').value))]);
  const total=v.t==='royalty'?v.fc.length*Number($('royaltyRate').value):v.t==='trainer'?v.fc.length*Number($('trainerFreshRate').value)+v.rc.length*Number($('trainerReviewRate').value):v.fc.length*Number($('recruiterRate').value);
- doc.autoTable({startY:y,head:[[{content:'Student Details',colSpan:5,styles:{halign:'center',fillColor:[215,232,204],textColor:[45,53,39]} }],['S No.','Particulars','Nos.','Share per Student','Total']],body:rows,foot:[[{content:'Total',colSpan:4,styles:{halign:'right',fontStyle:'bold'}},money(total)]],theme:'grid',styles:{font:'helvetica',fontSize:8.5,cellPadding:2.5,textColor:[48,38,58],lineColor:[150,135,162],lineWidth:.25},headStyles:{fillColor:[230,218,242],textColor:[58,38,76],fontStyle:'bold',halign:'center'},footStyles:{fillColor:[245,239,250],textColor:[48,38,58]},columnStyles:{0:{cellWidth:14,halign:'center'},1:{cellWidth:61},2:{cellWidth:17,halign:'center'},3:{cellWidth:39,halign:'right'},4:{cellWidth:39,halign:'right'}}});
+ doc.autoTable({startY:y,head:[[{content:'Student Details',colSpan:5,styles:{halign:'center',fillColor:[238,231,246],textColor:[79,59,102]} }],['S No.','Particulars','Nos.','Share per Student','Total']],body:rows,foot:[[{content:'Total',colSpan:4,styles:{halign:'right',fontStyle:'bold'}},money(total)]],theme:'grid',styles:{font:pdfFont,fontSize:8.5,cellPadding:2.5,textColor:[48,40,57],lineColor:[215,202,230],lineWidth:.2},headStyles:{fillColor:[238,231,246],textColor:[79,59,102],fontStyle:'bold',halign:'center',lineColor:[215,202,230]},alternateRowStyles:{fillColor:[252,250,255]},footStyles:{fillColor:[248,245,251],textColor:[48,40,57]},columnStyles:{0:{cellWidth:14,halign:'center'},1:{cellWidth:61},2:{cellWidth:17,halign:'center'},3:{cellWidth:39,halign:'right'},4:{cellWidth:39,halign:'right'}}});
  y=doc.lastAutoTable.finalY+8;
  // Make one continuous, consistently styled sequence of name rows.
  const items=[];
  const addCategory=(label,names)=>{if(!names.length)return;items.push({kind:'label',text:label});names.forEach((name,i)=>items.push({kind:'name',number:i+1,text:name}))};
  addCategory('List of Freshers:',v.fc);
- if(v.t==='trainer'||v.rc.length)addCategory('List of Reviewers:',v.rc);
+ if(v.t==='trainer')addCategory('List of Reviewers:',v.rc);
  if(namesStartOnNewPage){
   // More than 50 students: page one is a clean summary page without any student names.
   doc.addPage();drawHeader(doc,title);
@@ -139,7 +202,7 @@ function makePDF(v){
   // Measure each row with the same font and width used when drawing it, then paginate safely.
   const measure=(item)=>{
    if(item.kind==='label')return 5.2;
-   doc.setFont('helvetica','normal');doc.setFontSize(8);
+   doc.setFont(pdfFont,'normal');doc.setFontSize(8);
    return Math.max(4.2,doc.splitTextToSize(`${item.number}.  ${properCase(item.text)}`,colW-4).length*4.0);
   };
   let cursor=0;
@@ -168,11 +231,12 @@ function makePDF(v){
  // Signature lines are repeated on every page, including summary-only page one for >50 students.
  const totalPages=doc.getNumberOfPages();
  for(let p=1;p<=totalPages;p++){doc.setPage(p);drawSignatures(doc);footer(doc,p,totalPages)}
- const prefix=v.t==='royalty'?'Royalty':v.t==='trainer'?'Trainer_Fees':'Recruiter_Fees';
+ const prefix=v.t==='royalty'?'Royalty':v.t==='trainer'?'Trainer_Fees':v.t==='recruiterVoucher'?'Recruiter_Fees_Payment_Voucher':'Recruiter_Fees_Invoice';
  const name=`${prefix}_${cleanFilePart(v.className)}_${filenameDate(v.dates.a)}.pdf`;doc.save(name)
 }
-$('classSelect').addEventListener('change',()=>{$('otherClassWrap').classList.toggle('hidden',$('classSelect').value!=='__OTHER__');updateRates()});$('centreNameSelect').addEventListener('change',()=>{$('centreNameOther').classList.toggle('hidden',$('centreNameSelect').value!=='__OTHER__')});document.querySelectorAll('input[name="docType"]').forEach(el=>el.addEventListener('change',()=>{toggleType();if(selectedType()==='recruiter'){$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');}}));['freshers','reviewers'].forEach(id=>$(id).addEventListener('input',recalc));['royaltyRate','trainerFreshRate','trainerReviewRate','recruiterRate'].forEach(id=>$(id).addEventListener('input',e=>{if(e.target.value.includes('.')){e.target.setCustomValidity('Whole numbers only; decimals are not allowed.');}else{e.target.setCustomValidity('');}recalc()}));['fromDate','toDate'].forEach(id=>$(id).addEventListener('input',e=>{window.longClassApproved=false;let v=e.target.value.replace(/\D/g,'').slice(0,6);if(v.length>4)v=v.slice(0,2)+'-'+v.slice(2,4)+'-'+v.slice(4);else if(v.length>2)v=v.slice(0,2)+'-'+v.slice(2);e.target.value=v;}));$('generateBtn').addEventListener('click',()=>{const v=validate();if(v)makePDF(v)});$('voucherForm').addEventListener('reset',()=>setTimeout(()=>{window.longClassApproved=false;$('otherClassWrap').classList.add('hidden');$('otherClass').value='';$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');$('heldAt').value='';$('trainerName').value='';$('dateWarning').classList.add('hidden');toggleType();updateRates()},0));
-['otherClass','centreNameOther','trainerName','heldAt'].forEach(id=>$(id).addEventListener('blur',()=>{$(id).value=properCase($(id).value)}));
+
+$('classSelect').addEventListener('change',()=>{$('otherClassWrap').classList.toggle('hidden',$('classSelect').value!=='__OTHER__');updateRates()});$('centreNameSelect').addEventListener('change',()=>{$('centreNameOther').classList.toggle('hidden',$('centreNameSelect').value!=='__OTHER__')});document.querySelectorAll('input[name="docType"]').forEach(el=>el.addEventListener('change',()=>{toggleType();if(selectedType()==='recruiter'){$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');}}));['freshers','reviewers'].forEach(id=>$(id).addEventListener('input',recalc));['royaltyRate','trainerFreshRate','trainerReviewRate','recruiterRate'].forEach(id=>$(id).addEventListener('input',e=>{if(e.target.value.includes('.')){e.target.setCustomValidity('Whole numbers only; decimals are not allowed.');}else{e.target.setCustomValidity('');}recalc()}));['fromDate','toDate'].forEach(id=>$(id).addEventListener('input',e=>{window.longClassApproved=false;let v=e.target.value.replace(/\D/g,'').slice(0,6);if(v.length>4)v=v.slice(0,2)+'-'+v.slice(2,4)+'-'+v.slice(4);else if(v.length>2)v=v.slice(0,2)+'-'+v.slice(2);e.target.value=v;}));$('generateBtn').addEventListener('click',async()=>{const v=validate();if(v){try{await makePDF(v)}catch(err){console.error('PDF generation failed:',err);alert('PDF generation failed. Please check the browser console for details and try again.')}}});$('voucherForm').addEventListener('reset',()=>setTimeout(()=>{window.longClassApproved=false;$('otherClassWrap').classList.add('hidden');$('otherClass').value='';$('centreNameSelect').value='MCKS Pranic Healing Trust of Assam';$('centreNameOther').value='';$('centreNameOther').classList.add('hidden');$('heldAt').value='';$('attendedCentre').value='';$('trainerName').value='';$('dateWarning').classList.add('hidden');toggleType();updateRates()},0));
+['otherClass','centreNameOther','attendedCentre','trainerName','heldAt'].forEach(id=>$(id).addEventListener('blur',()=>{$(id).value=properCase($(id).value)}));
 populateClasses();updateRates();toggleType();
 </script>
 </body></html>
